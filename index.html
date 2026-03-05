@@ -71,6 +71,7 @@
             border-radius: 8px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             overflow-x: auto; 
+            margin-bottom: 20px;
         }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th { background-color: var(--primary); color: var(--white); text-align: left; padding: 12px; }
@@ -102,10 +103,11 @@
             border-radius: 5px; 
             cursor: pointer; 
             border: none; 
-            font-size: 1rem; 
-            margin-top: 20px;
+            font-size: 0.9rem; 
+            margin-top: 10px;
+            margin-right: 10px;
         }
-        .btn:hover { background-color: #2980b9; }
+        .btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -115,6 +117,7 @@
     <button class="nav-btn" onclick="showPage('hardware-page', this)">Hardware Bill</button>
     <button class="nav-btn" onclick="showPage('furniture-page', this)">Interior & Setup</button>
     <button class="nav-btn" onclick="showPage('promo-page', this)">Promotional Bill</button>
+    <button class="nav-btn" onclick="showPage('supplies-page', this)">Stationery & Cleaning</button>
 </nav>
 
 <div class="container">
@@ -132,19 +135,20 @@
             </div>
             <div class="card">
                 <h3>Total Spent (All Bills)</h3>
-                <p>₹265,938</p>
+                <p>₹268,538</p>
             </div>
             <div class="card">
                 <h3>Remaining Budget</h3>
-                <p class="over-budget">-₹5,938</p>
+                <p class="over-budget">-₹8,538</p>
             </div>
         </div>
         <div class="table-container">
             <h3>Quick Links</h3>
             <p>Select a specific bill below to view the detailed breakdown.</p>
-            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[1].click()">View Hardware Bill →</button>
-            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[2].click()" style="margin-left: 10px; background-color: #27ae60;">View Interior & Setup →</button>
-            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[3].click()" style="margin-left: 10px; background-color: #e67e22;">View Promotional Bill →</button>
+            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[1].click()" style="background-color: #3498db;">View Hardware Bill →</button>
+            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[2].click()" style="background-color: #27ae60;">View Interior & Setup →</button>
+            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[3].click()" style="background-color: #e67e22;">View Promotional Bill →</button>
+            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[4].click()" style="background-color: #8e44ad;">View Stationery & Cleaning →</button>
         </div>
     </div>
 
@@ -248,6 +252,34 @@
                     <tr><td>5</td><td>Standing Banner (4x2 size)</td><td>1</td><td>1500</td></tr>
                     
                     <tr class="summary-row"><td colspan="3">TOTAL COST</td><td>7000</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="supplies-page" class="page">
+        <h2>Stationery & Cleaning Breakdown</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SL. NO.</th>
+                        <th>ITEM</th>
+                        <th>QUANTITY</th>
+                        <th>AMOUNT (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>White Board</td><td>1</td><td>2600</td></tr>
+                    <tr><td>2</td><td>Marker</td><td>2</td><td>NA</td></tr>
+                    <tr><td>3</td><td>Duster</td><td>1</td><td>NA</td></tr>
+                    <tr><td>4</td><td>Mop</td><td>1</td><td>NA</td></tr>
+                    <tr><td>5</td><td>Broom</td><td>2</td><td>NA</td></tr>
+                    <tr><td>6</td><td>Register</td><td>2</td><td>NA</td></tr>
+                    <tr><td>7</td><td>GSM Paper Bundle</td><td>1</td><td>NA</td></tr>
+                    <tr><td>8</td><td>Normal Paper Bundle</td><td>1</td><td>NA</td></tr>
+                    
+                    <tr class="summary-row"><td colspan="3">TOTAL COST</td><td>2600</td></tr>
                 </tbody>
             </table>
         </div>
