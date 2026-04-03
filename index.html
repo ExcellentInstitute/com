@@ -63,29 +63,15 @@
             z-index: 20;
         }
 
-        .brand-container {
-            padding: 32px 24px 24px;
-        }
+        .brand-container { padding: 32px 24px 24px; }
 
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
+        .brand-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
         
         .logo-icon {
             background: linear-gradient(135deg, var(--primary), #818cf8);
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+            color: white; width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
         }
 
         .brand-text h1 { font-size: 1.15rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.01em;}
@@ -94,32 +80,16 @@
         .nav-menu { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; padding: 0 16px; margin-top: 10px;}
 
         .nav-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--text-secondary); 
-            font-size: 0.95rem; 
-            font-weight: 500; 
-            text-align: left; 
-            cursor: pointer; 
-            padding: 12px 16px; 
-            border-radius: var(--radius-md); 
-            transition: all 0.2s ease; 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
+            background: transparent; border: none; color: var(--text-secondary); 
+            font-size: 0.95rem; font-weight: 500; text-align: left; cursor: pointer; 
+            padding: 12px 16px; border-radius: var(--radius-md); transition: all 0.2s ease; 
+            display: flex; align-items: center; gap: 12px; 
         }
         .nav-btn:hover { background-color: var(--bg-app); color: var(--text-main); }
         .nav-btn.active { background-color: var(--info-bg); color: var(--primary); font-weight: 600; }
         
         /* --- MAIN CONTENT AREA --- */
-        .main-wrapper { 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; position: relative; overflow-y: auto; overflow-x: hidden; }
         
         /* Loading Overlay */
         #loading-overlay { 
@@ -135,30 +105,26 @@
 
         /* Header */
         .top-header { 
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 20px 40px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--border-light); 
-            position: sticky; top: 0; z-index: 10; 
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 10; 
         }
         .header-title { font-size: 1.25rem; font-weight: 600; color: var(--text-main); }
-
         .header-actions { display: flex; gap: 12px; }
 
         .btn-primary { 
-            background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-md); 
-            font-weight: 500; font-size: 0.9rem; cursor: pointer; box-shadow: var(--shadow-sm); 
+            background-color: var(--success); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-md); 
+            font-weight: 600; font-size: 0.9rem; cursor: pointer; box-shadow: var(--shadow-sm); 
             transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; 
         }
-        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-card); }
-        .btn-primary:active { transform: translateY(0); }
-
-        .btn-danger-outline {
-            background-color: transparent; color: var(--danger); border: 1px solid var(--danger);
-            padding: 10px 16px; border-radius: var(--radius-md); font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+        .btn-primary:hover { background-color: var(--success-hover); transform: translateY(-1px); box-shadow: var(--shadow-card); }
+        
+        .btn-repair {
+            background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-md); 
+            font-weight: 600; font-size: 0.9rem; cursor: pointer; box-shadow: var(--shadow-card); 
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 8px;
         }
-        .btn-danger-outline:hover { background-color: var(--danger-bg); }
+        .btn-repair:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: var(--shadow-floating); }
 
         /* Page Content */
         .content { padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
@@ -167,9 +133,7 @@
         @keyframes fadeIn { to { opacity: 1; } }
 
         /* --- DASHBOARD CARDS --- */
-        .dashboard-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; 
-        }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
         
         .metric-card { 
             background: var(--bg-card); padding: 24px; border-radius: var(--radius-xl); 
@@ -177,16 +141,13 @@
             display: flex; align-items: center; gap: 20px;
         }
         
-        .metric-icon {
-            width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-        }
+        .metric-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
         .icon-blue { background-color: var(--info-bg); color: var(--info); }
         .icon-green { background-color: var(--success-bg); color: var(--success); }
         .icon-red { background-color: var(--danger-bg); color: var(--danger); }
 
         .metric-info h3 { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
         .metric-info p { font-size: 1.75rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
-        
         .over-budget p { color: var(--danger); }
 
         .info-card {
@@ -223,22 +184,14 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background-color: #fcfcfd; }
         
-        /* Editable Cells Styling */
-        td[contenteditable="true"] { 
-            border: 1px dashed transparent; border-radius: 4px; transition: all 0.2s; padding: 14px 22px; margin: 2px;
-        }
+        td[contenteditable="true"] { border: 1px dashed transparent; border-radius: 4px; transition: all 0.2s; padding: 14px 22px; margin: 2px; }
         td[contenteditable="true"]:hover { border-color: var(--border-focus); background-color: rgba(244, 247, 251, 0.5); cursor: text; }
-        td[contenteditable="true"]:focus { 
-            border-color: var(--primary); background-color: #fff; outline: none; 
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); 
-        }
+        td[contenteditable="true"]:focus { border-color: var(--primary); background-color: #fff; outline: none; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
 
-        /* Summary Rows */
         .summary-row { background-color: #f8fafc !important; }
         .summary-row td { font-weight: 600; color: var(--text-main); border-top: 2px solid var(--border-light);}
         .summary-row td:first-child { text-align: right; }
         .balance-row td { background-color: var(--danger-bg) !important; color: var(--danger); font-weight: 700;}
-        
         .note-text { color: var(--text-tertiary); font-size: 0.8em; display: block; margin-top: 6px; font-weight: 400;}
 
         /* Controls */
@@ -305,7 +258,6 @@
 </aside>
 
 <main class="main-wrapper">
-    
     <div id="loading-overlay">
         <div class="spinner"></div>
         <h3>Syncing Database...</h3>
@@ -350,32 +302,25 @@
             
             <div class="info-card">
                 <div>
-                    <h4>Data Sync Controls</h4>
-                    <p>Clicking <strong>Sync to Server</strong> saves your current edits. If your dashboard ever shows 0 unexpectedly, click the restore button to reinstall the Failsafe Data.</p>
+                    <h4>Google Sheet Corrupted?</h4>
+                    <p>If your totals are missing numbers, your Google Sheet lost data during an error. Click this button to forcefully write the correct numbers back to your server.</p>
                 </div>
-                <button class="btn-danger-outline" onclick="forceRestoreFailsafe()">Restore Default Data</button>
+                <button class="btn-repair" onclick="forceRepairDatabase()">🛠️ Auto-Repair Database</button>
             </div>
         </div>
 
         <div id="hardware-page" class="page" data-title="Hardware Ledger">
             <div class="section-header">
-                <div>
-                    <h2>Computer & Lab Equipment</h2>
-                    <p>Track all hardware purchases and installations.</p>
-                </div>
+                <div><h2>Computer & Lab Equipment</h2><p>Track all hardware purchases and installations.</p></div>
             </div>
             <div class="table-card">
                 <div class="table-scroll">
-                    <table id="table-hardware">
-                        <thead id="thead-hardware"></thead>
-                        <tbody id="tbody-hardware"></tbody>
-                    </table>
+                    <table id="table-hardware"><thead id="thead-hardware"></thead><tbody id="tbody-hardware"></tbody></table>
                 </div>
                 <div class="table-footer">
                     <span class="note-text">Click any cell to edit. Changes are temporary until you hit Sync.</span>
                     <button class="btn-add" onclick="addNewRow('Hardware', 'tbody-hardware')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Add Row
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row
                     </button>
                 </div>
             </div>
@@ -383,23 +328,16 @@
 
         <div id="furniture-page" class="page" data-title="Interior & Setup Ledger">
             <div class="section-header">
-                <div>
-                    <h2>Furniture & Infrastructure</h2>
-                    <p>Track desks, chairs, electrical, and structural expenses.</p>
-                </div>
+                <div><h2>Furniture & Infrastructure</h2><p>Track desks, chairs, electrical, and structural expenses.</p></div>
             </div>
             <div class="table-card">
                 <div class="table-scroll">
-                    <table id="table-interior">
-                        <thead id="thead-interior"></thead>
-                        <tbody id="tbody-interior"></tbody>
-                    </table>
+                    <table id="table-interior"><thead id="thead-interior"></thead><tbody id="tbody-interior"></tbody></table>
                 </div>
                 <div class="table-footer">
                     <span class="note-text">Click any cell to edit. Changes are temporary until you hit Sync.</span>
                     <button class="btn-add" onclick="addNewRow('Interior', 'tbody-interior')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Add Row
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row
                     </button>
                 </div>
             </div>
@@ -407,23 +345,16 @@
 
         <div id="promo-page" class="page" data-title="Marketing Ledger">
             <div class="section-header">
-                <div>
-                    <h2>Promotional Materials</h2>
-                    <p>Track banners, posters, and marketing expenses.</p>
-                </div>
+                <div><h2>Promotional Materials</h2><p>Track banners, posters, and marketing expenses.</p></div>
             </div>
             <div class="table-card">
                 <div class="table-scroll">
-                    <table id="table-promo">
-                        <thead id="thead-promo"></thead>
-                        <tbody id="tbody-promo"></tbody>
-                    </table>
+                    <table id="table-promo"><thead id="thead-promo"></thead><tbody id="tbody-promo"></tbody></table>
                 </div>
                 <div class="table-footer">
                     <span class="note-text">Click any cell to edit. Changes are temporary until you hit Sync.</span>
                     <button class="btn-add" onclick="addNewRow('Promo', 'tbody-promo')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Add Row
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row
                     </button>
                 </div>
             </div>
@@ -431,23 +362,16 @@
 
         <div id="supplies-page" class="page" data-title="Operations Ledger">
             <div class="section-header">
-                <div>
-                    <h2>Stationery & Cleaning</h2>
-                    <p>Track daily operational supplies and maintenance items.</p>
-                </div>
+                <div><h2>Stationery & Cleaning</h2><p>Track daily operational supplies and maintenance items.</p></div>
             </div>
             <div class="table-card">
                 <div class="table-scroll">
-                    <table id="table-stationery">
-                        <thead id="thead-stationery"></thead>
-                        <tbody id="tbody-stationery"></tbody>
-                    </table>
+                    <table id="table-stationery"><thead id="thead-stationery"></thead><tbody id="tbody-stationery"></tbody></table>
                 </div>
                 <div class="table-footer">
                     <span class="note-text">Click any cell to edit. Changes are temporary until you hit Sync.</span>
                     <button class="btn-add" onclick="addNewRow('Stationery', 'tbody-stationery')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Add Row
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row
                     </button>
                 </div>
             </div>
@@ -465,7 +389,7 @@
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKY1r2RVdlG0DAOkHl108F0sbb80yslLhSaYhWLM982TCFvzyiqpGi3iouyzv28jMQ4A/exec"; 
     const TOTAL_INVESTMENT = 260000;
 
-    // --- FAILSAFE MEMORY ---
+    // --- FAILSAFE DATA ---
     const INITIAL_DATA_FAILSAFE = {
         "Hardware": [
             ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
@@ -549,26 +473,16 @@
         loadDataFromServer();
     });
 
-    // --- Core Logic ---
     async function loadDataFromServer() {
         let finalDataToUse = INITIAL_DATA_FAILSAFE;
-        let isSuccess = false;
-
+        
         try {
             const response = await fetch(WEB_APP_URL);
             const serverData = await response.json();
             
-            // Check if sheet actually has our specific tabs with more than 1 row of data
-            let isValidDatabase = false;
+            // Safety check: Ensure the sheet actually has our specific tabs 
             if (serverData && serverData['Hardware'] && serverData['Hardware'].length > 1) {
-                isValidDatabase = true;
-            }
-
-            if (isValidDatabase) {
                 finalDataToUse = serverData;
-                isSuccess = true;
-            } else {
-                console.warn("Sheet is empty or corrupted. Loading Failsafe.");
             }
         } catch (error) {
             console.error("Fetch failed.", error);
@@ -576,13 +490,16 @@
 
         renderAllTables(finalDataToUse);
         calculateDashboardTotals(finalDataToUse);
-        
         document.getElementById('loading-overlay').style.display = 'none';
+        showStatus("Database Connected", "success", "✅");
+    }
 
-        if (isSuccess) {
-            showStatus("Database Synced", "success", "✅");
-        } else {
-            showStatus("Loaded Local Data (Sheet was empty)", "warning", "⚠️");
+    // --- THE FIX ---
+    function forceRepairDatabase() {
+        if(confirm("This will completely overwrite your Google Sheet with the correct data (Total: ₹275,168) and fix the missing Promo totals forever. Continue?")) {
+            renderAllTables(INITIAL_DATA_FAILSAFE);
+            calculateDashboardTotals(INITIAL_DATA_FAILSAFE);
+            saveToCloud(); // Auto-saves the pristine data to the server
         }
     }
 
@@ -593,19 +510,9 @@
         buildTable('Stationery', dataObj['Stationery']);
     }
 
-    // Explicit function to wipe server and restore the initial data
-    function forceRestoreFailsafe() {
-        if(confirm("Are you sure? This will load the default built-in data. You still need to click 'Sync to Server' to save it permanently.")) {
-            renderAllTables(INITIAL_DATA_FAILSAFE);
-            calculateDashboardTotals(INITIAL_DATA_FAILSAFE);
-            showStatus("Failsafe Data Loaded. Click Sync!", "success", "🔄");
-        }
-    }
-
     function buildTable(sheetName, sheetData) {
         let theadId = `thead-${sheetName.toLowerCase()}`;
         let tbodyId = `tbody-${sheetName.toLowerCase()}`;
-        
         const thead = document.getElementById(theadId);
         const tbody = document.getElementById(tbodyId);
         if(!thead || !tbody) return;
@@ -644,7 +551,7 @@
         }
     }
 
-    // Extremely robust calculator that never outputs 0 if there are numbers.
+    // --- MATH CALCULATOR ---
     function calculateDashboardTotals(allData) {
         let grandTotalSpent = 0;
 
@@ -652,8 +559,11 @@
             const sheetData = allData[sheetName];
             if (sheetData && sheetData.length > 1) {
                 
-                // Try finding explicit TOTAL row first
-                const totalRow = sheetData.find(row => String(row[0]).toUpperCase().includes('TOTAL'));
+                // Aggressive search: Does the word "TOTAL" exist in any cell of this row?
+                const totalRow = sheetData.find(row => 
+                    Array.isArray(row) && row.some(cell => String(cell).toUpperCase().includes('TOTAL'))
+                );
+                
                 let foundTotal = false;
 
                 if (totalRow) {
@@ -668,7 +578,7 @@
                     }
                 }
 
-                // If no TOTAL row found, manually sum up the final column of every item!
+                // If no TOTAL row is found, sum up the right-most column manually
                 if(!foundTotal) {
                     let manualSum = 0;
                     for(let i=1; i<sheetData.length; i++) {
