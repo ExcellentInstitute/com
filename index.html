@@ -7,22 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Modern SaaS Color Palette */
             --bg-body: #f1f5f9;
             --bg-sidebar: #0f172a;
             --bg-card: #ffffff;
-            
             --text-main: #334155;
             --text-muted: #64748b;
             --text-light: #f8fafc;
-            
-            --primary: #4f46e5;      /* Indigo */
+            --primary: #4f46e5;
             --primary-hover: #4338ca;
-            --success: #10b981;      /* Emerald */
+            --success: #10b981;
             --success-hover: #059669;
-            --danger: #ef4444;       /* Red */
-            --warning: #f59e0b;      /* Amber */
-            
+            --danger: #ef4444;
+            --warning: #f59e0b;
             --border-color: #e2e8f0;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -31,208 +27,75 @@
 
         * { box-sizing: border-box; }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-body); 
-            margin: 0; 
-            padding: 0; 
-            color: var(--text-main); 
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
         
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 260px;
-            background-color: var(--bg-sidebar);
-            color: var(--text-light);
-            display: flex;
-            flex-direction: column;
-            padding: 20px 0;
-            box-shadow: var(--shadow-lg);
-            z-index: 10;
-        }
-
-        .brand {
-            padding: 0 24px 24px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 20px;
-        }
-
+        /* SIDEBAR */
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); color: var(--text-light); display: flex; flex-direction: column; padding: 20px 0; box-shadow: var(--shadow-lg); z-index: 10; }
+        .brand { padding: 0 24px 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
         .brand h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.025em; }
         .brand p { margin: 4px 0 0; font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
-
         .nav-menu { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
-
-        .nav-btn { 
-            background: transparent; 
-            border: none; 
-            color: #cbd5e1; 
-            font-size: 0.95rem; 
-            font-weight: 500; 
-            text-align: left;
-            cursor: pointer; 
-            padding: 12px 16px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .nav-btn { background: transparent; border: none; color: #cbd5e1; font-size: 0.95rem; font-weight: 500; text-align: left; cursor: pointer; padding: 12px 16px; border-radius: 8px; transition: all 0.2s ease; display: flex; align-items: center; gap: 10px; }
         .nav-btn:hover { background-color: rgba(255,255,255,0.05); color: white; }
         .nav-btn.active { background-color: var(--primary); color: white; box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39); }
 
-        /* --- MAIN CONTENT --- */
-        .main-wrapper {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
+        /* MAIN CONTENT */
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative;}
+        
+        /* LOADING OVERLAY */
+        #loading-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); z-index: 50; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .top-header {
-            background: var(--bg-card);
-            padding: 16px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 5;
-        }
-
+        .top-header { background: var(--bg-card); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
         .header-title { font-size: 1.1rem; font-weight: 600; margin: 0; color: var(--bg-sidebar); }
 
-        .save-btn { 
-            background-color: var(--success); 
-            color: white; 
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .save-btn { background-color: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; box-shadow: var(--shadow-sm); transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
         .save-btn:hover { background-color: var(--success-hover); transform: translateY(-1px); box-shadow: var(--shadow-md); }
         .save-btn:active { transform: translateY(0); }
 
         .content { padding: 32px; max-width: 1400px; margin: 0 auto; width: 100%; }
 
-        /* --- DASHBOARD CARDS --- */
+        /* DASHBOARD CARDS */
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 32px; }
-        
-        .card { 
-            background: var(--bg-card); 
-            padding: 24px; 
-            border-radius: 12px; 
-            box-shadow: var(--shadow-md); 
-            border: 1px solid var(--border-color);
-            transition: transform 0.2s ease;
-        }
+        .card { background: var(--bg-card); padding: 24px; border-radius: 12px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); transition: transform 0.2s ease; }
         .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
         .card h3 { margin: 0 0 8px 0; font-size: 0.875rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
         .card p { margin: 0; font-size: 2rem; font-weight: 700; color: var(--bg-sidebar); }
-        
         .over-budget p { color: var(--danger) !important; }
 
-        /* --- TABLE STYLES --- */
+        /* TABLE STYLES */
         .page-header { margin: 0 0 20px 0; font-size: 1.5rem; font-weight: 700; color: var(--bg-sidebar); }
-
-        .table-container { 
-            background: var(--bg-card); 
-            border-radius: 12px; 
-            box-shadow: var(--shadow-md); 
-            border: 1px solid var(--border-color);
-            overflow: hidden; 
-            margin-bottom: 24px;
-        }
-        
+        .table-container { background: var(--bg-card); border-radius: 12px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 24px; }
         .table-scroll { overflow-x: auto; max-height: calc(100vh - 280px); }
-
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        
-        th { 
-            background-color: #f8fafc; 
-            color: var(--text-muted); 
-            padding: 16px 20px; 
-            font-weight: 600; 
-            font-size: 0.75rem; 
-            text-transform: uppercase; 
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-        
-        td { 
-            padding: 16px 20px; 
-            border-bottom: 1px solid var(--border-color); 
-            font-size: 0.9rem;
-            color: var(--text-main);
-        }
-        
+        th { background-color: #f8fafc; color: var(--text-muted); padding: 16px 20px; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 2; }
+        td { padding: 16px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-main); }
         tr:hover td { background-color: #f1f5f9; }
         
-        /* Editability Styling */
-        td[contenteditable="true"] { 
-            border: 1px dashed transparent; 
-            border-radius: 4px;
-            transition: all 0.2s; 
-        }
+        td[contenteditable="true"] { border: 1px dashed transparent; border-radius: 4px; transition: all 0.2s; }
         td[contenteditable="true"]:hover { border-color: #cbd5e1; background-color: rgba(255,255,255,0.5); cursor: text; }
-        td[contenteditable="true"]:focus { 
-            border-color: var(--primary); 
-            background-color: #fff; 
-            outline: none; 
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); 
-        }
+        td[contenteditable="true"]:focus { border-color: var(--primary); background-color: #fff; outline: none; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
 
-        /* Summary Rows */
         .summary-row td { font-weight: 700; background-color: #f8fafc; color: var(--bg-sidebar); }
         .summary-row td:first-child { text-align: right; }
         .balance-row td { background-color: #fef2f2; color: var(--danger); }
-        
         .note-text { color: var(--text-muted); font-size: 0.8em; display: block; margin-top: 6px; font-style: italic; font-weight: normal;}
 
-        /* --- BUTTONS & UTILS --- */
+        /* BUTTONS & UTILS */
         .page { display: none; animation: fadeUp 0.4s ease forwards; opacity: 0; transform: translateY(10px); }
         .page.active { display: block; }
-        
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-        .action-bar { padding: 16px 20px; background-color: #f8fafc; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end;}
+        .action-bar { padding: 16px 20px; background-color: #f8fafc; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;}
         
-        .btn-add { 
-            background-color: var(--bg-card); 
-            color: var(--primary); 
-            border: 1px solid var(--primary);
-            padding: 8px 16px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 0.875rem; 
-            font-weight: 600;
-            transition: all 0.2s; 
-        }
+        .btn-add { background-color: var(--bg-card); color: var(--primary); border: 1px solid var(--primary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; }
         .btn-add:hover { background-color: var(--primary); color: white; }
         
-        /* Status message */
-        #status-msg { 
-            position: fixed; bottom: 24px; right: 24px; 
-            padding: 16px 24px; border-radius: 8px; color: white; font-weight: 600; 
-            display: flex; align-items: center; gap: 10px;
-            box-shadow: var(--shadow-lg);
-            transform: translateY(100px); opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000; 
-        }
+        .btn-delete { background-color: transparent; color: var(--danger); border: none; cursor: pointer; font-size: 1.2rem; padding: 0 5px; opacity: 0.5; transition: opacity 0.2s; }
+        .btn-delete:hover { opacity: 1; }
+
+        #status-msg { position: fixed; bottom: 24px; right: 24px; padding: 16px 24px; border-radius: 8px; color: white; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; }
         #status-msg.show { transform: translateY(0); opacity: 1; }
         .status-success { background-color: var(--success); }
         .status-error { background-color: var(--danger); }
@@ -244,7 +107,7 @@
 <aside class="sidebar">
     <div class="brand">
         <h1>Excellent Institute</h1>
-        <p>Financial Tracker v2.0</p>
+        <p>Live Database v3.0</p>
     </div>
     <nav class="nav-menu">
         <button class="nav-btn active" onclick="showPage('dashboard-page', this)">📊 Dashboard</button>
@@ -257,6 +120,12 @@
 
 <main class="main-wrapper">
     
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h3>Connecting to Database...</h3>
+        <p style="color: var(--text-muted);">Fetching your latest records.</p>
+    </div>
+
     <header class="top-header">
         <h2 class="header-title" id="current-page-title">Dashboard Overview</h2>
         <button class="save-btn" onclick="saveToCloud()">
@@ -270,22 +139,21 @@
             <div class="dashboard">
                 <div class="card">
                     <h3>Total Investment</h3>
-                    <p>₹260,000</p>
+                    <p id="dash-investment">₹260,000</p>
                 </div>
                 <div class="card">
                     <h3>Total Spent (All Bills)</h3>
-                    <p>₹275,168</p>
+                    <p id="dash-spent">₹0</p>
                 </div>
-                <div class="card over-budget">
+                <div class="card" id="balance-card">
                     <h3>Net Balance</h3>
-                    <p>-₹15,168</p>
+                    <p id="dash-balance">₹0</p>
                 </div>
             </div>
-            
             <div class="card" style="background: linear-gradient(135deg, var(--primary), #818cf8); color: white; border: none;">
-                <h3 style="color: rgba(255,255,255,0.8);">Welcome to your new workspace</h3>
-                <p style="font-size: 1.2rem; font-weight: 400; margin-top: 10px;">
-                    Select a category from the sidebar to view or edit individual line items. Changes made in the tables will only be permanently saved when you click the <strong>Sync to Server</strong> button above.
+                <h3 style="color: rgba(255,255,255,0.8);">System is Online</h3>
+                <p style="font-size: 1.1rem; font-weight: 400; margin-top: 10px;">
+                    This app is now directly connected to your Google Sheet. It will load fresh data every time you open it. Remember to click <strong>Sync to Server</strong> to save any edits or new rows.
                 </p>
             </div>
         </div>
@@ -295,45 +163,13 @@
             <div class="table-container">
                 <div class="table-scroll">
                     <table id="table-hardware">
-                        <thead>
-                            <tr>
-                                <th>SL. NO.</th>
-                                <th>ITEM</th>
-                                <th>QTY</th>
-                                <th>PRICE (₹)</th>
-                                <th>TOTAL (₹)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-hardware">
-                            <tr><td>1</td><td contenteditable="true">Motherboard</td><td contenteditable="true">10</td><td contenteditable="true">1600</td><td class="row-total">16000</td></tr>
-                            <tr><td>2</td><td contenteditable="true">CPU I5 3RD GEN</td><td contenteditable="true">10</td><td contenteditable="true">1670</td><td class="row-total">16700</td></tr>
-                            <tr><td>3</td><td contenteditable="true">CPU FAN</td><td contenteditable="true">10</td><td contenteditable="true">270</td><td class="row-total">2700</td></tr>
-                            <tr><td>4</td><td contenteditable="true">RAM 4 GB</td><td contenteditable="true">10</td><td contenteditable="true">950</td><td class="row-total">9500</td></tr>
-                            <tr><td>5</td><td contenteditable="true">SSD 256GB</td><td contenteditable="true">10</td><td contenteditable="true">3830</td><td class="row-total">38300</td></tr>
-                            <tr><td>6</td><td contenteditable="true">CABINET</td><td contenteditable="true">10</td><td contenteditable="true">1700</td><td class="row-total">17000</td></tr>
-                            <tr><td>7</td><td contenteditable="true">MONITOR</td><td contenteditable="true">10</td><td contenteditable="true">2000</td><td class="row-total">20000</td></tr>
-                            <tr><td>8</td><td contenteditable="true">Keyboard & Mouse</td><td contenteditable="true">10</td><td contenteditable="true">340</td><td class="row-total">3400</td></tr>
-                            <tr><td>9</td><td contenteditable="true">CANON G2010 PRINTER</td><td contenteditable="true">1</td><td contenteditable="true">10500</td><td class="row-total">10500</td></tr>
-                            <tr><td>10</td><td contenteditable="true">Motherboard</td><td contenteditable="true">1</td><td contenteditable="true">3700</td><td class="row-total">3700</td></tr>
-                            <tr><td>11</td><td contenteditable="true">CPU I5 6TH GEN</td><td contenteditable="true">1</td><td contenteditable="true">3200</td><td class="row-total">3200</td></tr>
-                            <tr><td>12</td><td contenteditable="true">CPU FAN</td><td contenteditable="true">1</td><td contenteditable="true">270</td><td class="row-total">270</td></tr>
-                            <tr><td>13</td><td contenteditable="true">RAM 8 GB</td><td contenteditable="true">1</td><td contenteditable="true">5200</td><td class="row-total">5200</td></tr>
-                            <tr><td>14</td><td contenteditable="true">SSD 256GB</td><td contenteditable="true">1</td><td contenteditable="true">3830</td><td class="row-total">3830</td></tr>
-                            <tr><td>15</td><td contenteditable="true">CABINET GAMING</td><td contenteditable="true">1</td><td contenteditable="true">1700</td><td class="row-total">1700</td></tr>
-                            <tr><td>16</td><td contenteditable="true">MONITOR</td><td contenteditable="true">1</td><td contenteditable="true">2000</td><td class="row-total">2000</td></tr>
-                            <tr><td>17</td><td contenteditable="true">Keyboard & Mouse</td><td contenteditable="true">1</td><td contenteditable="true">340</td><td class="row-total">340</td></tr>
-                            <tr><td>18</td><td contenteditable="true">MOUSE PAD</td><td contenteditable="true">11</td><td contenteditable="true">40</td><td class="row-total">440</td></tr>
-                            <tr><td>19</td><td contenteditable="true">LAN CABLE (25m)</td><td contenteditable="true">1</td><td contenteditable="true">750</td><td class="row-total">750</td></tr>
-                            <tr><td>20</td><td contenteditable="true">16 Port Switch</td><td contenteditable="true">1</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
-                            
-                            <tr class="summary-row"><td colspan="4">TOTAL</td><td>155530</td></tr>
-                            <tr class="summary-row"><td colspan="4">ADVANCE</td><td>10000</td></tr>
-                            <tr class="summary-row balance-row"><td colspan="4">BALANCE</td><td>145530</td></tr>
-                        </tbody>
+                        <thead id="thead-hardware"></thead>
+                        <tbody id="tbody-hardware"></tbody>
                     </table>
                 </div>
                 <div class="action-bar">
-                    <button class="btn-add" onclick="addNewRow('tbody-hardware')">+ Add New Item</button>
+                    <span style="font-size: 0.8em; color: var(--text-muted);">Use the 'x' to delete rows. Click Sync to save deletions.</span>
+                    <button class="btn-add" onclick="addNewRow('Hardware', 'tbody-hardware')">+ Add New Item</button>
                 </div>
             </div>
         </div>
@@ -343,38 +179,13 @@
             <div class="table-container">
                 <div class="table-scroll">
                     <table id="table-interior">
-                        <thead>
-                            <tr>
-                                <th>SL. NO.</th>
-                                <th>ITEM</th>
-                                <th>QTY</th>
-                                <th>AMOUNT (₹)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-interior">
-                            <tr><td>1</td><td contenteditable="true">Table</td><td contenteditable="true">3</td><td contenteditable="true" class="row-total">18375</td></tr>
-                            <tr><td>2</td><td contenteditable="true">Switch Board</td><td contenteditable="true">7</td><td contenteditable="true" class="row-total">675</td></tr>
-                            <tr><td>3</td><td contenteditable="true">Stool</td><td contenteditable="true">10</td><td contenteditable="true" class="row-total">2600</td></tr>
-                            <tr><td>4</td><td contenteditable="true">Normal Chair</td><td contenteditable="true">3</td><td contenteditable="true" class="row-total">900</td></tr>
-                            <tr><td>5</td><td contenteditable="true">Height Adjustable Chair</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">3256</td></tr>
-                            <tr><td>6</td><td contenteditable="true">Extension Board</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">949</td></tr>
-                            <tr><td>7</td><td contenteditable="true">Height Adjustable Laptop Desk</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">873</td></tr>
-                            <tr>
-                                <td>8</td>
-                                <td><div contenteditable="true">Electric Work (Fan, Light, Wiring, etc.)</div><span class="note-text">*Note: Adjustable with room rent</span></td>
-                                <td contenteditable="true">NA</td><td contenteditable="true" class="row-total">25000</td>
-                            </tr>
-                            <tr><td>9</td><td contenteditable="true">Carpenter Charges</td><td contenteditable="true">NA</td><td contenteditable="true" class="row-total">17280</td></tr>
-                            <tr><td>10</td><td contenteditable="true">EVO-S 2300 UPS</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">10500</td></tr>
-                            <tr><td>11</td><td contenteditable="true">Battery 150 ah</td><td contenteditable="true">2</td><td contenteditable="true" class="row-total">23000</td></tr>
-                            <tr><td>12</td><td contenteditable="true">Broadband Service</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">5000</td></tr>
-                            
-                            <tr class="summary-row"><td colspan="3">TOTAL</td><td>108408</td></tr>
-                        </tbody>
+                        <thead id="thead-interior"></thead>
+                        <tbody id="tbody-interior"></tbody>
                     </table>
                 </div>
                 <div class="action-bar">
-                    <button class="btn-add" onclick="addNewRowInterior('tbody-interior')">+ Add New Item</button>
+                    <span style="font-size: 0.8em; color: var(--text-muted);">Use the 'x' to delete rows. Click Sync to save deletions.</span>
+                    <button class="btn-add" onclick="addNewRow('Interior', 'tbody-interior')">+ Add New Item</button>
                 </div>
             </div>
         </div>
@@ -384,28 +195,13 @@
             <div class="table-container">
                 <div class="table-scroll">
                     <table id="table-promo">
-                        <thead>
-                            <tr>
-                                <th>SL. NO.</th>
-                                <th>ITEM</th>
-                                <th>QTY</th>
-                                <th>AMOUNT (₹)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-promo">
-                            <tr><td>1</td><td contenteditable="true">Banner (4x9 size)</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">NA</td></tr>
-                            <tr><td>2</td><td contenteditable="true">Banner (4x6 size)</td><td contenteditable="true">4</td><td contenteditable="true" class="row-total">NA</td></tr>
-                            <tr><td>3</td><td contenteditable="true">Leaflet</td><td contenteditable="true">1000</td><td contenteditable="true" class="row-total">NA</td></tr>
-                            <tr><td>4</td><td contenteditable="true">Wall Poster</td><td contenteditable="true">500</td><td contenteditable="true" class="row-total">NA</td></tr>
-                            <tr><td>5</td><td contenteditable="true">Standing Banner (4x2 size)</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">1500</td></tr>
-                            <tr><td>6</td><td contenteditable="true">Banner (2x3 size)</td><td contenteditable="true">2</td><td contenteditable="true" class="row-total">NA</td></tr>
-                            
-                            <tr class="summary-row"><td colspan="3">TOTAL COST</td><td>7000</td></tr>
-                        </tbody>
+                        <thead id="thead-promo"></thead>
+                        <tbody id="tbody-promo"></tbody>
                     </table>
                 </div>
                 <div class="action-bar">
-                    <button class="btn-add" onclick="addNewRowInterior('tbody-promo')">+ Add Promo Item</button>
+                    <span style="font-size: 0.8em; color: var(--text-muted);">Use the 'x' to delete rows. Click Sync to save deletions.</span>
+                    <button class="btn-add" onclick="addNewRow('Promo', 'tbody-promo')">+ Add Promo Item</button>
                 </div>
             </div>
         </div>
@@ -415,119 +211,210 @@
             <div class="table-container">
                 <div class="table-scroll">
                     <table id="table-stationery">
-                        <thead>
-                            <tr>
-                                <th>SL. NO.</th>
-                                <th>ITEM</th>
-                                <th>QTY</th>
-                                <th>PRICE (₹)</th>
-                                <th>TOTAL (₹)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-stationery">
-                            <tr><td>1</td><td contenteditable="true">White Board</td><td contenteditable="true">1</td><td contenteditable="true">2735</td><td class="row-total">2735</td></tr>
-                            <tr><td>2</td><td contenteditable="true">Marker</td><td contenteditable="true">2</td><td contenteditable="true">50</td><td class="row-total">100</td></tr>
-                            <tr><td>3</td><td contenteditable="true">Duster</td><td contenteditable="true">1</td><td contenteditable="true">75</td><td class="row-total">75</td></tr>
-                            <tr><td>4</td><td contenteditable="true">Mop</td><td contenteditable="true">1</td><td contenteditable="true">160</td><td class="row-total">160</td></tr>
-                            <tr><td>5</td><td contenteditable="true">Broom</td><td contenteditable="true">1</td><td contenteditable="true">60</td><td class="row-total">60</td></tr>
-                            <tr><td>6</td><td contenteditable="true">Register</td><td contenteditable="true">2</td><td contenteditable="true">110</td><td class="row-total">220</td></tr>
-                            <tr><td>7</td><td contenteditable="true">GSM Paper Bundle</td><td contenteditable="true">1</td><td contenteditable="true">175</td><td class="row-total">175</td></tr>
-                            <tr><td>8</td><td contenteditable="true">Normal Paper Bundle</td><td contenteditable="true">1</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
-                            <tr><td>9</td><td contenteditable="true">Dust Pan</td><td contenteditable="true">1</td><td contenteditable="true">50</td><td class="row-total">50</td></tr>
-                            <tr><td>10</td><td contenteditable="true">Pen Packet</td><td contenteditable="true">1</td><td contenteditable="true">15</td><td class="row-total">15</td></tr>
-                            <tr><td>11</td><td contenteditable="true">Lock</td><td contenteditable="true">1</td><td contenteditable="true">120</td><td class="row-total">120</td></tr>
-                            <tr><td>12</td><td contenteditable="true">Extension Board</td><td contenteditable="true">1</td><td contenteditable="true">150</td><td class="row-total">150</td></tr>
-                            <tr><td>13</td><td contenteditable="true">Water Dispenser</td><td contenteditable="true">1</td><td contenteditable="true">170</td><td class="row-total">170</td></tr>
-                            <tr><td>14</td><td contenteditable="true">Foot Scrubber Mat</td><td contenteditable="true">4</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
-                            <tr><td>15</td><td contenteditable="true">Carpet</td><td contenteditable="true">2</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
-                            <tr><td>16</td><td contenteditable="true">Door Curtain</td><td contenteditable="true">4</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
-                            <tr><td>17</td><td contenteditable="true">Floor Cleaning Finail</td><td contenteditable="true">1</td><td contenteditable="true">100</td><td class="row-total">100</td></tr>
-                            <tr><td>18</td><td contenteditable="true">Cleaning Acid</td><td contenteditable="true">1</td><td contenteditable="true">100</td><td class="row-total">100</td></tr>
-                            <tr><td>19</td><td contenteditable="true">Dustbin</td><td contenteditable="true">1</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
-                            
-                            <tr class="summary-row"><td colspan="4">TOTAL COST</td><td>4230</td></tr>
-                        </tbody>
+                        <thead id="thead-stationery"></thead>
+                        <tbody id="tbody-stationery"></tbody>
                     </table>
                 </div>
                 <div class="action-bar">
-                    <button class="btn-add" onclick="addNewRow('tbody-stationery')">+ Add New Item</button>
+                    <span style="font-size: 0.8em; color: var(--text-muted);">Use the 'x' to delete rows. Click Sync to save deletions.</span>
+                    <button class="btn-add" onclick="addNewRow('Stationery', 'tbody-stationery')">+ Add Stationery Item</button>
                 </div>
             </div>
         </div>
-
     </div>
 </main>
 
 <div id="status-msg">
     <span id="status-icon">⏳</span>
-    <span id="status-text">Saving...</span>
+    <span id="status-text">Connecting...</span>
 </div>
 
 <script>
-    // --- SERVER CONNECTION ---
-    // PASTE YOUR ACTUAL GOOGLE APP SCRIPT URL BETWEEN THE QUOTES BELOW!
-    const WEB_APP_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE"; 
+    // --- CONNECTED TO YOUR GOOGLE APP SCRIPT URL ---
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKY1r2RVdlG0DAOkHl108F0sbb80yslLhSaYhWLM982TCFvzyiqpGi3iouyzv28jMQ4A/exec"; 
 
-    // --- Navigation Logic ---
-    function showPage(pageId, btnElement) {
-        // Hide all pages
-        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-        // Remove active state from nav buttons
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        
-        // Show selected page
-        const targetPage = document.getElementById(pageId);
-        targetPage.classList.add('active');
-        
-        // Update Title dynamically
-        const pageTitle = targetPage.getAttribute('data-title');
-        document.getElementById('current-page-title').innerText = pageTitle;
+    // Constants
+    const TOTAL_INVESTMENT = 260000;
 
-        // Highlight active button
-        if (btnElement) btnElement.classList.add('active');
-    }
+    // --- On Load: Fetch Data ---
+    document.addEventListener("DOMContentLoaded", () => {
+        loadDataFromServer();
+    });
 
-    // --- Table Row Addition Logic ---
-    function addNewRow(tbodyId) {
-        const tbody = document.getElementById(tbodyId);
-        // Calculate rows excluding the summary/total rows at the bottom
-        const dataRows = Array.from(tbody.rows).filter(r => !r.classList.contains('summary-row'));
-        const rowCount = dataRows.length + 1;
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${rowCount}</td>
-            <td contenteditable="true">New Item</td>
-            <td contenteditable="true">1</td>
-            <td contenteditable="true">0</td>
-            <td class="row-total">0</td>
-        `;
-        // Insert right before the first summary row
-        tbody.insertBefore(row, dataRows[dataRows.length - 1].nextSibling);
-    }
-
-    function addNewRowInterior(tbodyId) {
-        const tbody = document.getElementById(tbodyId);
-        const dataRows = Array.from(tbody.rows).filter(r => !r.classList.contains('summary-row'));
-        const rowCount = dataRows.length + 1;
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${rowCount}</td>
-            <td contenteditable="true">New Item</td>
-            <td contenteditable="true">1</td>
-            <td contenteditable="true" class="row-total">0</td>
-        `;
-        tbody.insertBefore(row, dataRows[dataRows.length - 1].nextSibling);
-    }
-
-    // --- Server Sync Logic ---
-    async function saveToCloud() {
-        if (WEB_APP_URL === "YOUR_GOOGLE_SCRIPT_URL_HERE") {
-            showStatus("Action Required: Please paste your Web App URL into the HTML code.", "error", "⚠️");
+    async function loadDataFromServer() {
+        if (!WEB_APP_URL || WEB_APP_URL === "YOUR_GOOGLE_SCRIPT_URL_HERE") {
+            document.getElementById('loading-overlay').innerHTML = "<h3>Configuration Error</h3><p>Please insert your Web App URL into the HTML file.</p>";
             return;
         }
 
+        try {
+            // Using GET request defined in Apps Script
+            const response = await fetch(WEB_APP_URL);
+            const data = await response.json();
+            
+            buildTable('Hardware', data['Hardware']);
+            buildTable('Interior', data['Interior']);
+            buildTable('Promo', data['Promo']);
+            buildTable('Stationery', data['Stationery']);
+            
+            calculateDashboardTotals(data);
+            
+            // Hide loading overlay
+            document.getElementById('loading-overlay').style.display = 'none';
+            showStatus("Database Connected!", "success", "✅");
+
+        } catch (error) {
+            console.error(error);
+            document.getElementById('loading-overlay').innerHTML = "<h3>Connection Failed</h3><p>Could not reach the Google Sheet server. Check your internet connection or URL.</p>";
+        }
+    }
+
+    // --- Build Tables Dynamically ---
+    function buildTable(sheetName, sheetData) {
+        let theadId = "";
+        let tbodyId = "";
+        
+        if (sheetName === 'Hardware') { theadId = 'thead-hardware'; tbodyId = 'tbody-hardware'; }
+        if (sheetName === 'Interior') { theadId = 'thead-interior'; tbodyId = 'tbody-interior'; }
+        if (sheetName === 'Promo') { theadId = 'thead-promo'; tbodyId = 'tbody-promo'; }
+        if (sheetName === 'Stationery') { theadId = 'thead-stationery'; tbodyId = 'tbody-stationery'; }
+
+        const thead = document.getElementById(theadId);
+        const tbody = document.getElementById(tbodyId);
+        
+        thead.innerHTML = '';
+        tbody.innerHTML = '';
+
+        if (!sheetData || sheetData.length === 0) return;
+
+        // Build Header
+        const headerRow = sheetData[0];
+        let theadHTML = "<tr>";
+        headerRow.forEach(text => { theadHTML += `<th>${text}</th>`; });
+        theadHTML += "<th></th>"; // Extra column for delete button
+        theadHTML += "</tr>";
+        thead.innerHTML = madeHeaderReadable(theadHTML);
+
+        // Build Rows
+        for (let i = 1; i < sheetData.length; i++) {
+            const rowData = sheetData[i];
+            const tr = document.createElement('tr');
+            
+            // Determine if it's a summary row based on the first cell text
+            const firstCellText = String(rowData[0]).toUpperCase();
+            if (firstCellText.includes("TOTAL") || firstCellText.includes("ADVANCE") || firstCellText.includes("BALANCE")) {
+                tr.className = firstCellText.includes("BALANCE") ? "summary-row balance-row" : "summary-row";
+                // Handle colspan manually for summary rows (assumes specific structure)
+                let cellHTML = `<td colspan="${headerRow.length - 1}">${rowData[0]}</td>`;
+                cellHTML += `<td>${rowData[rowData.length - 1]}</td>`;
+                cellHTML += `<td></td>`; // No delete button on summary
+                tr.innerHTML = cellHTML;
+            } else {
+                // Regular Data Row
+                let rowHTML = "";
+                rowData.forEach((cellData, index) => {
+                    // Make columns editable (except SL NO, usually index 0)
+                    const editable = index > 0 ? 'contenteditable="true"' : '';
+                    rowHTML += `<td ${editable}>${cellData}</td>`;
+                });
+                rowHTML += `<td><button class="btn-delete" onclick="deleteRow(this)" title="Delete Row">×</button></td>`;
+                tr.innerHTML = rowHTML;
+            }
+            tbody.appendChild(tr);
+        }
+    }
+
+    // Helper to fix specific formatting in headers if needed
+    function madeHeaderReadable(html) {
+        return html; // Currently passthrough
+    }
+
+    // --- Dashboard Calculation ---
+    function calculateDashboardTotals(allData) {
+        let grandTotalSpent = 0;
+
+        // Loop through the data array to find the TOTAL rows
+        ['Hardware', 'Interior', 'Promo', 'Stationery'].forEach(sheetName => {
+            const sheetData = allData[sheetName];
+            if (sheetData) {
+                // Look for the row where the first column contains "TOTAL"
+                const totalRow = sheetData.find(row => String(row[0]).toUpperCase().includes('TOTAL'));
+                if (totalRow) {
+                    // The actual numeric total is always in the last column
+                    const val = parseFloat(totalRow[totalRow.length - 1]);
+                    if (!isNaN(val)) grandTotalSpent += val;
+                }
+            }
+        });
+
+        const netBalance = TOTAL_INVESTMENT - grandTotalSpent;
+
+        document.getElementById('dash-spent').innerText = `₹${grandTotalSpent.toLocaleString()}`;
+        
+        const balanceEl = document.getElementById('dash-balance');
+        balanceEl.innerText = `${netBalance < 0 ? '-' : ''}₹${Math.abs(netBalance).toLocaleString()}`;
+        
+        if (netBalance < 0) {
+            document.getElementById('balance-card').classList.add('over-budget');
+        } else {
+            document.getElementById('balance-card').classList.remove('over-budget');
+        }
+    }
+
+    // --- Add / Delete Rows ---
+    function addNewRow(sheetType, tbodyId) {
+        const tbody = document.getElementById(tbodyId);
+        const dataRows = Array.from(tbody.rows).filter(r => !r.classList.contains('summary-row'));
+        const rowCount = dataRows.length + 1;
+        
+        // Determine column count based on table type
+        let rowHTML = `<td>${rowCount}</td><td contenteditable="true">New Item</td><td contenteditable="true">1</td>`;
+        if (sheetType === 'Hardware' || sheetType === 'Stationery') {
+            rowHTML += `<td contenteditable="true">0</td><td contenteditable="true">0</td>`;
+        } else {
+            rowHTML += `<td contenteditable="true">0</td>`;
+        }
+        rowHTML += `<td><button class="btn-delete" onclick="deleteRow(this)">×</button></td>`;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = rowHTML;
+        
+        // Insert right before summary rows
+        if(dataRows.length > 0) {
+             tbody.insertBefore(row, dataRows[dataRows.length - 1].nextSibling);
+        } else {
+             tbody.prepend(row); // If table is empty
+        }
+        
+        updateSlNumbers(tbody);
+    }
+
+    function deleteRow(btn) {
+        const row = btn.closest('tr');
+        const tbody = row.parentNode;
+        row.remove();
+        updateSlNumbers(tbody);
+    }
+
+    function updateSlNumbers(tbody) {
+        const dataRows = Array.from(tbody.rows).filter(r => !r.classList.contains('summary-row'));
+        dataRows.forEach((row, index) => {
+            row.cells[0].innerText = index + 1;
+        });
+    }
+
+    // --- Page Navigation ---
+    function showPage(pageId, btnElement) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        const targetPage = document.getElementById(pageId);
+        targetPage.classList.add('active');
+        document.getElementById('current-page-title').innerText = targetPage.getAttribute('data-title');
+        if (btnElement) btnElement.classList.add('active');
+    }
+
+    // --- Save Data to Google Sheets ---
+    async function saveToCloud() {
         showStatus("Syncing to Server...", "loading", "⏳");
 
         const sheetsToSave = [
@@ -542,19 +429,35 @@
                 const table = document.getElementById(sheet.id);
                 let rowData = [];
                 
-                // Extract Headers
+                // Get Headers (ignore the last header which is just for the delete button)
                 let headers = [];
-                let ths = table.querySelectorAll('thead th');
-                ths.forEach(th => headers.push(th.innerText));
+                let ths = Array.from(table.querySelectorAll('thead th'));
+                ths.slice(0, -1).forEach(th => headers.push(th.innerText));
                 rowData.push(headers);
 
-                // Extract Rows
+                // Get Rows
                 let trs = table.querySelectorAll('tbody tr');
                 trs.forEach(tr => {
                     let cells = [];
-                    // We remove specific formatting/newlines that might mess up sheets
-                    tr.querySelectorAll('td').forEach(td => cells.push(td.innerText.replace(/\n/g, " ")));
-                    rowData.push(cells);
+                    // Summary rows have colspans, handle carefully
+                    if (tr.classList.contains('summary-row')) {
+                        let td1 = tr.cells[0];
+                        let td2 = tr.cells[1]; // The actual total value
+                        
+                        // Push empty strings to align with header columns
+                        let paddedCells = [];
+                        let colSpan = parseInt(td1.getAttribute('colspan') || 1);
+                        paddedCells.push(td1.innerText);
+                        for(let i=1; i<colSpan; i++) paddedCells.push("");
+                        paddedCells.push(td2.innerText);
+                        
+                        rowData.push(paddedCells);
+                    } else {
+                        // Normal rows, ignore the last cell (delete button)
+                        let tds = Array.from(tr.cells);
+                        tds.slice(0, -1).forEach(td => cells.push(td.innerText.replace(/\n/g, " ")));
+                        rowData.push(cells);
+                    }
                 });
 
                 // Send to Server
@@ -565,14 +468,18 @@
                     body: JSON.stringify({ sheetName: sheet.name, rows: rowData })
                 });
             }
-            showStatus("Sync Complete! Data securely backed up.", "success", "✅");
+            
+            // Reload data to ensure everything is in sync and totals are updated
+            await loadDataFromServer();
+            showStatus("Sync Complete!", "success", "✅");
+            
         } catch (error) {
             console.error(error);
-            showStatus("Connection failed. Please check internet.", "error", "❌");
+            showStatus("Connection failed.", "error", "❌");
         }
     }
 
-    // --- Toast Notification Logic ---
+    // --- Status Messages ---
     function showStatus(message, type, icon) {
         const msgBox = document.getElementById('status-msg');
         document.getElementById('status-text').innerText = message;
