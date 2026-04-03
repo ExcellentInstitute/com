@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excellent Institute - Expenditure Tracker</title>
+    <title>Excellent Institute - Interactive Tracker</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -26,8 +26,9 @@
             background-color: var(--primary); 
             padding: 15px 20px; 
             display: flex; 
-            gap: 20px; 
+            gap: 15px; 
             flex-wrap: wrap;
+            align-items: center;
         }
         nav button { 
             background: none; 
@@ -42,88 +43,72 @@
         }
         nav button:hover { background-color: #34495e; }
         nav button.active { background-color: var(--active-nav); }
+        
+        .save-btn { background-color: #27ae60 !important; margin-left: auto; }
+        .save-btn:hover { background-color: #2ecc71 !important; }
 
         .container { max-width: 1100px; margin: 20px auto; padding: 20px; }
         header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid var(--secondary); padding-bottom: 20px;}
         
         /* Dashboard Layout */
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 20px; 
-            margin-bottom: 30px; 
-        }
-        .card { 
-            background: var(--white); 
-            padding: 20px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            text-align: center; 
-        }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
         .card h3 { margin: 0; font-size: 0.9rem; color: #7f8c8d; }
         .card p { margin: 10px 0 0; font-size: 1.5rem; font-weight: bold; color: var(--secondary); }
         .over-budget { color: var(--accent) !important; }
 
         /* Table Styles */
-        .table-container { 
-            background: var(--white); 
-            padding: 20px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            overflow-x: auto; 
-            margin-bottom: 20px;
-        }
+        .table-container { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow-x: auto; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th { background-color: var(--primary); color: var(--white); text-align: left; padding: 12px; }
         td { padding: 12px; border-bottom: 1px solid #ddd; }
-        tr:hover { background-color: #f9f9f9; }
         
+        /* Make editable cells look slightly different */
+        td[contenteditable="true"] { background-color: #fcfcfc; border: 1px dashed #ccc; transition: 0.2s; }
+        td[contenteditable="true"]:focus { background-color: #fff; border: 1px solid var(--secondary); outline: none; }
+        
+        tr:hover { background-color: #f9f9f9; }
         .summary-row { font-weight: bold; background-color: #ecf0f1; }
         .summary-row td:first-child { text-align: right; padding-right: 20px; }
         .balance-row { font-weight: bold; background-color: #fdeaea; color: var(--accent); }
         
-        /* Note styling */
         .note-text { color: var(--secondary); font-size: 0.85em; display: block; margin-top: 4px; font-style: italic; }
 
         /* Multi-page Logic */
         .page { display: none; animation: fadeIn 0.3s; }
         .page.active { display: block; }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .btn { 
-            display: inline-block; 
-            background-color: var(--secondary); 
-            color: white; 
-            padding: 10px 20px; 
-            text-decoration: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            border: none; 
-            font-size: 0.9rem; 
-            margin-top: 10px;
-            margin-right: 10px;
-        }
+        .btn { display: inline-block; background-color: var(--secondary); color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; border: none; font-size: 0.9rem; margin-top: 10px; margin-right: 10px; }
         .btn:hover { opacity: 0.9; }
+        .add-btn { background-color: #8e44ad; }
+        
+        /* Status message */
+        #status-msg { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; border-radius: 5px; color: white; font-weight: bold; display: none; z-index: 1000; }
+        .status-success { background-color: #27ae60; }
+        .status-error { background-color: #e74c3c; }
+        .status-loading { background-color: #f39c12; }
     </style>
 </head>
 <body>
 
 <nav>
     <button class="nav-btn active" onclick="showPage('dashboard-page', this)">Dashboard</button>
-    <button class="nav-btn" onclick="showPage('hardware-page', this)">Hardware Bill</button>
-    <button class="nav-btn" onclick="showPage('furniture-page', this)">Interior & Setup</button>
-    <button class="nav-btn" onclick="showPage('promo-page', this)">Promotional Bill</button>
-    <button class="nav-btn" onclick="showPage('supplies-page', this)">Stationery & Cleaning</button>
+    <button class="nav-btn" onclick="showPage('hardware-page', this)">Hardware</button>
+    <button class="nav-btn" onclick="showPage('furniture-page', this)">Interior</button>
+    <button class="nav-btn" onclick="showPage('promo-page', this)">Promo</button>
+    <button class="nav-btn" onclick="showPage('supplies-page', this)">Stationery</button>
+    
+    <button class="save-btn" onclick="saveToCloud()">💾 Backup to Server</button>
 </nav>
+
+<div id="status-msg">Saving...</div>
 
 <div class="container">
     <header>
         <h1>Excellent Institute</h1>
-        <p>Project Expenditure Tracking</p>
+        <p>Interactive Expenditure Tracking</p>
     </header>
 
     <div id="dashboard-page" class="page active">
@@ -143,19 +128,14 @@
             </div>
         </div>
         <div class="table-container">
-            <h3>Quick Links</h3>
-            <p>Select a specific bill below to view the detailed breakdown.</p>
-            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[1].click()" style="background-color: #3498db;">View Hardware Bill →</button>
-            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[2].click()" style="background-color: #27ae60;">View Interior & Setup →</button>
-            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[3].click()" style="background-color: #e67e22;">View Promotional Bill →</button>
-            <button class="btn" onclick="document.querySelectorAll('.nav-btn')[4].click()" style="background-color: #8e44ad;">View Stationery & Cleaning →</button>
+            <p><strong>Note:</strong> You can now edit the cells in the tables directly. Click "Backup to Server" when you are done making changes to save them to Google Sheets.</p>
         </div>
     </div>
 
     <div id="hardware-page" class="page">
         <h2>Hardware Breakdown</h2>
         <div class="table-container">
-            <table>
+            <table id="table-hardware">
                 <thead>
                     <tr>
                         <th>SL. NO.</th>
@@ -165,40 +145,37 @@
                         <th>TOTAL (₹)</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>1</td><td>Motherboard</td><td>10</td><td>1600</td><td>16000</td></tr>
-                    <tr><td>2</td><td>CPU I5 3RD GEN</td><td>10</td><td>1670</td><td>16700</td></tr>
-                    <tr><td>3</td><td>CPU FAN</td><td>10</td><td>270</td><td>2700</td></tr>
-                    <tr><td>4</td><td>RAM 4 GB</td><td>10</td><td>950</td><td>9500</td></tr>
-                    <tr><td>5</td><td>SSD 256GB</td><td>10</td><td>3830</td><td>38300</td></tr>
-                    <tr><td>6</td><td>CABINET</td><td>10</td><td>1700</td><td>17000</td></tr>
-                    <tr><td>7</td><td>MONITOR</td><td>10</td><td>2000</td><td>20000</td></tr>
-                    <tr><td>8</td><td>Keyboard & Mouse</td><td>10</td><td>340</td><td>3400</td></tr>
-                    <tr><td>9</td><td>CANON G2010 PRINTER</td><td>1</td><td>10500</td><td>10500</td></tr>
-                    <tr><td>10</td><td>Motherboard</td><td>1</td><td>3700</td><td>3700</td></tr>
-                    <tr><td>11</td><td>CPU I5 6TH GEN</td><td>1</td><td>3200</td><td>3200</td></tr>
-                    <tr><td>12</td><td>CPU FAN</td><td>1</td><td>270</td><td>270</td></tr>
-                    <tr><td>13</td><td>RAM 8 GB</td><td>1</td><td>5200</td><td>5200</td></tr>
-                    <tr><td>14</td><td>SSD 256GB</td><td>1</td><td>3830</td><td>3830</td></tr>
-                    <tr><td>15</td><td>CABINET GAMING</td><td>1</td><td>1700</td><td>1700</td></tr>
-                    <tr><td>16</td><td>MONITOR</td><td>1</td><td>2000</td><td>2000</td></tr>
-                    <tr><td>17</td><td>Keyboard & Mouse</td><td>1</td><td>340</td><td>340</td></tr>
-                    <tr><td>18</td><td>MOUSE PAD</td><td>11</td><td>40</td><td>440</td></tr>
-                    <tr><td>19</td><td>LAN CABLE (25m)</td><td>1</td><td>750</td><td>750</td></tr>
-                    <tr><td>20</td><td>16 Port Switch</td><td>1</td><td>NA</td><td>NA</td></tr>
-                    
-                    <tr class="summary-row"><td colspan="4">TOTAL</td><td>155530</td></tr>
-                    <tr class="summary-row"><td colspan="4">ADVANCE</td><td>10000</td></tr>
-                    <tr class="summary-row balance-row"><td colspan="4">BALANCE</td><td>145530</td></tr>
+                <tbody id="tbody-hardware">
+                    <tr><td>1</td><td contenteditable="true">Motherboard</td><td contenteditable="true">10</td><td contenteditable="true">1600</td><td class="row-total">16000</td></tr>
+                    <tr><td>2</td><td contenteditable="true">CPU I5 3RD GEN</td><td contenteditable="true">10</td><td contenteditable="true">1670</td><td class="row-total">16700</td></tr>
+                    <tr><td>3</td><td contenteditable="true">CPU FAN</td><td contenteditable="true">10</td><td contenteditable="true">270</td><td class="row-total">2700</td></tr>
+                    <tr><td>4</td><td contenteditable="true">RAM 4 GB</td><td contenteditable="true">10</td><td contenteditable="true">950</td><td class="row-total">9500</td></tr>
+                    <tr><td>5</td><td contenteditable="true">SSD 256GB</td><td contenteditable="true">10</td><td contenteditable="true">3830</td><td class="row-total">38300</td></tr>
+                    <tr><td>6</td><td contenteditable="true">CABINET</td><td contenteditable="true">10</td><td contenteditable="true">1700</td><td class="row-total">17000</td></tr>
+                    <tr><td>7</td><td contenteditable="true">MONITOR</td><td contenteditable="true">10</td><td contenteditable="true">2000</td><td class="row-total">20000</td></tr>
+                    <tr><td>8</td><td contenteditable="true">Keyboard & Mouse</td><td contenteditable="true">10</td><td contenteditable="true">340</td><td class="row-total">3400</td></tr>
+                    <tr><td>9</td><td contenteditable="true">CANON G2010 PRINTER</td><td contenteditable="true">1</td><td contenteditable="true">10500</td><td class="row-total">10500</td></tr>
+                    <tr><td>10</td><td contenteditable="true">Motherboard</td><td contenteditable="true">1</td><td contenteditable="true">3700</td><td class="row-total">3700</td></tr>
+                    <tr><td>11</td><td contenteditable="true">CPU I5 6TH GEN</td><td contenteditable="true">1</td><td contenteditable="true">3200</td><td class="row-total">3200</td></tr>
+                    <tr><td>12</td><td contenteditable="true">CPU FAN</td><td contenteditable="true">1</td><td contenteditable="true">270</td><td class="row-total">270</td></tr>
+                    <tr><td>13</td><td contenteditable="true">RAM 8 GB</td><td contenteditable="true">1</td><td contenteditable="true">5200</td><td class="row-total">5200</td></tr>
+                    <tr><td>14</td><td contenteditable="true">SSD 256GB</td><td contenteditable="true">1</td><td contenteditable="true">3830</td><td class="row-total">3830</td></tr>
+                    <tr><td>15</td><td contenteditable="true">CABINET GAMING</td><td contenteditable="true">1</td><td contenteditable="true">1700</td><td class="row-total">1700</td></tr>
+                    <tr><td>16</td><td contenteditable="true">MONITOR</td><td contenteditable="true">1</td><td contenteditable="true">2000</td><td class="row-total">2000</td></tr>
+                    <tr><td>17</td><td contenteditable="true">Keyboard & Mouse</td><td contenteditable="true">1</td><td contenteditable="true">340</td><td class="row-total">340</td></tr>
+                    <tr><td>18</td><td contenteditable="true">MOUSE PAD</td><td contenteditable="true">11</td><td contenteditable="true">40</td><td class="row-total">440</td></tr>
+                    <tr><td>19</td><td contenteditable="true">LAN CABLE (25m)</td><td contenteditable="true">1</td><td contenteditable="true">750</td><td class="row-total">750</td></tr>
+                    <tr><td>20</td><td contenteditable="true">16 Port Switch</td><td contenteditable="true">1</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
                 </tbody>
             </table>
+            <button class="btn add-btn" onclick="addNewRow('tbody-hardware')">+ Add Hardware Item</button>
         </div>
     </div>
 
     <div id="furniture-page" class="page">
         <h2>Interior & Setup Breakdown</h2>
         <div class="table-container">
-            <table>
+            <table id="table-interior">
                 <thead>
                     <tr>
                         <th>SL. NO.</th>
@@ -207,37 +184,29 @@
                         <th>AMOUNT (₹)</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>1</td><td>Table</td><td>3</td><td>18375</td></tr>
-                    <tr><td>2</td><td>Switch Board</td><td>7</td><td>675</td></tr>
-                    <tr><td>3</td><td>Stool</td><td>10</td><td>2600</td></tr>
-                    <tr><td>4</td><td>Normal Chair</td><td>3</td><td>900</td></tr>
-                    <tr><td>5</td><td>Height Adjustable Chair</td><td>1</td><td>3256</td></tr>
-                    <tr><td>6</td><td>Extension Board</td><td>1</td><td>949</td></tr>
-                    <tr><td>7</td><td>Height Adjustable Laptop Desk</td><td>1</td><td>873</td></tr>
-                    <tr>
-                        <td>8</td>
-                        <td>Electric Work (Fan, Light, Wiring, etc.)
-                            <span class="note-text">*Note: Adjustable with room rent</span>
-                        </td>
-                        <td>NA</td>
-                        <td>25000</td>
-                    </tr>
-                    <tr><td>9</td><td>Carpenter Charges</td><td>NA</td><td>17280</td></tr>
-                    <tr><td>10</td><td>EVO-S 2300 UPS</td><td>1</td><td>10500</td></tr>
-                    <tr><td>11</td><td>Battery 150 ah</td><td>2</td><td>23000</td></tr>
-                    <tr><td>12</td><td>Broadband Service</td><td>1</td><td>5000</td></tr>
-                    
-                    <tr class="summary-row"><td colspan="3">TOTAL</td><td>108408</td></tr>
+                <tbody id="tbody-interior">
+                    <tr><td>1</td><td contenteditable="true">Table</td><td contenteditable="true">3</td><td contenteditable="true" class="row-total">18375</td></tr>
+                    <tr><td>2</td><td contenteditable="true">Switch Board</td><td contenteditable="true">7</td><td contenteditable="true" class="row-total">675</td></tr>
+                    <tr><td>3</td><td contenteditable="true">Stool</td><td contenteditable="true">10</td><td contenteditable="true" class="row-total">2600</td></tr>
+                    <tr><td>4</td><td contenteditable="true">Normal Chair</td><td contenteditable="true">3</td><td contenteditable="true" class="row-total">900</td></tr>
+                    <tr><td>5</td><td contenteditable="true">Height Adjustable Chair</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">3256</td></tr>
+                    <tr><td>6</td><td contenteditable="true">Extension Board</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">949</td></tr>
+                    <tr><td>7</td><td contenteditable="true">Height Adjustable Laptop Desk</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">873</td></tr>
+                    <tr><td>8</td><td contenteditable="true">Electric Work (Fan, Light, Wiring, etc.)</td><td contenteditable="true">NA</td><td contenteditable="true" class="row-total">25000</td></tr>
+                    <tr><td>9</td><td contenteditable="true">Carpenter Charges</td><td contenteditable="true">NA</td><td contenteditable="true" class="row-total">17280</td></tr>
+                    <tr><td>10</td><td contenteditable="true">EVO-S 2300 UPS</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">10500</td></tr>
+                    <tr><td>11</td><td contenteditable="true">Battery 150 ah</td><td contenteditable="true">2</td><td contenteditable="true" class="row-total">23000</td></tr>
+                    <tr><td>12</td><td contenteditable="true">Broadband Service</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">5000</td></tr>
                 </tbody>
             </table>
+            <button class="btn add-btn" onclick="addNewRowInterior('tbody-interior')">+ Add Interior Item</button>
         </div>
     </div>
 
     <div id="promo-page" class="page">
         <h2>Promotional Materials Breakdown</h2>
         <div class="table-container">
-            <table>
+            <table id="table-promo">
                 <thead>
                     <tr>
                         <th>SL. NO.</th>
@@ -246,24 +215,23 @@
                         <th>AMOUNT (₹)</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>1</td><td>Banner (4x9 size)</td><td>1</td><td>NA</td></tr>
-                    <tr><td>2</td><td>Banner (4x6 size)</td><td>4</td><td>NA</td></tr>
-                    <tr><td>3</td><td>Leaflet</td><td>1000</td><td>NA</td></tr>
-                    <tr><td>4</td><td>Wall Poster</td><td>500</td><td>NA</td></tr>
-                    <tr><td>5</td><td>Standing Banner (4x2 size)</td><td>1</td><td>1500</td></tr>
-                    <tr><td>6</td><td>Banner (2x3 size)</td><td>2</td><td>NA</td></tr>
-                    
-                    <tr class="summary-row"><td colspan="3">TOTAL COST</td><td>7000</td></tr>
+                <tbody id="tbody-promo">
+                    <tr><td>1</td><td contenteditable="true">Banner (4x9 size)</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">NA</td></tr>
+                    <tr><td>2</td><td contenteditable="true">Banner (4x6 size)</td><td contenteditable="true">4</td><td contenteditable="true" class="row-total">NA</td></tr>
+                    <tr><td>3</td><td contenteditable="true">Leaflet</td><td contenteditable="true">1000</td><td contenteditable="true" class="row-total">NA</td></tr>
+                    <tr><td>4</td><td contenteditable="true">Wall Poster</td><td contenteditable="true">500</td><td contenteditable="true" class="row-total">NA</td></tr>
+                    <tr><td>5</td><td contenteditable="true">Standing Banner (4x2 size)</td><td contenteditable="true">1</td><td contenteditable="true" class="row-total">1500</td></tr>
+                    <tr><td>6</td><td contenteditable="true">Banner (2x3 size)</td><td contenteditable="true">2</td><td contenteditable="true" class="row-total">NA</td></tr>
                 </tbody>
             </table>
+            <button class="btn add-btn" onclick="addNewRowInterior('tbody-promo')">+ Add Promo Item</button>
         </div>
     </div>
 
     <div id="supplies-page" class="page">
         <h2>Stationery & Cleaning Breakdown</h2>
         <div class="table-container">
-            <table>
+            <table id="table-stationery">
                 <thead>
                     <tr>
                         <th>SL. NO.</th>
@@ -273,49 +241,135 @@
                         <th>TOTAL (₹)</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>1</td><td>White Board</td><td>1</td><td>2735</td><td>2735</td></tr>
-                    <tr><td>2</td><td>Marker</td><td>2</td><td>50</td><td>100</td></tr>
-                    <tr><td>3</td><td>Duster</td><td>1</td><td>75</td><td>75</td></tr>
-                    <tr><td>4</td><td>Mop</td><td>1</td><td>160</td><td>160</td></tr>
-                    <tr><td>5</td><td>Broom</td><td>2</td><td>60</td><td>120</td></tr>
-                    <tr><td>6</td><td>Register</td><td>2</td><td>110</td><td>220</td></tr>
-                    <tr><td>7</td><td>GSM Paper Bundle</td><td>1</td><td>175</td><td>175</td></tr>
-                    <tr><td>8</td><td>Normal Paper Bundle</td><td>1</td><td>NA</td><td>NA</td></tr>
-                    <tr><td>9</td><td>Dust Pan</td><td>1</td><td>50</td><td>50</td></tr>
-                    <tr><td>10</td><td>Pen Packet</td><td>1</td><td>15</td><td>15</td></tr>
-                    <tr><td>11</td><td>Lock</td><td>1</td><td>120</td><td>120</td></tr>
-                    <tr><td>12</td><td>Extension Board</td><td>1</td><td>150</td><td>150</td></tr>
-                    <tr><td>13</td><td>Water Dispenser</td><td>1</td><td>170</td><td>170</td></tr>
-                    
-                    <tr class="summary-row"><td colspan="4">TOTAL COST</td><td>4090</td></tr>
+                <tbody id="tbody-stationery">
+                    <tr><td>1</td><td contenteditable="true">White Board</td><td contenteditable="true">1</td><td contenteditable="true">2735</td><td class="row-total">2735</td></tr>
+                    <tr><td>2</td><td contenteditable="true">Marker</td><td contenteditable="true">2</td><td contenteditable="true">50</td><td class="row-total">100</td></tr>
+                    <tr><td>3</td><td contenteditable="true">Duster</td><td contenteditable="true">1</td><td contenteditable="true">75</td><td class="row-total">75</td></tr>
+                    <tr><td>4</td><td contenteditable="true">Mop</td><td contenteditable="true">1</td><td contenteditable="true">160</td><td class="row-total">160</td></tr>
+                    <tr><td>5</td><td contenteditable="true">Broom</td><td contenteditable="true">1</td><td contenteditable="true">60</td><td class="row-total">60</td></tr>
+                    <tr><td>6</td><td contenteditable="true">Register</td><td contenteditable="true">2</td><td contenteditable="true">110</td><td class="row-total">220</td></tr>
+                    <tr><td>7</td><td contenteditable="true">GSM Paper Bundle</td><td contenteditable="true">1</td><td contenteditable="true">175</td><td class="row-total">175</td></tr>
+                    <tr><td>8</td><td contenteditable="true">Normal Paper Bundle</td><td contenteditable="true">1</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
+                    <tr><td>9</td><td contenteditable="true">Dust Pan</td><td contenteditable="true">1</td><td contenteditable="true">50</td><td class="row-total">50</td></tr>
+                    <tr><td>10</td><td contenteditable="true">Pen Packet</td><td contenteditable="true">1</td><td contenteditable="true">15</td><td class="row-total">15</td></tr>
+                    <tr><td>11</td><td contenteditable="true">Lock</td><td contenteditable="true">1</td><td contenteditable="true">120</td><td class="row-total">120</td></tr>
+                    <tr><td>12</td><td contenteditable="true">Extension Board</td><td contenteditable="true">1</td><td contenteditable="true">150</td><td class="row-total">150</td></tr>
+                    <tr><td>13</td><td contenteditable="true">Water Dispenser</td><td contenteditable="true">1</td><td contenteditable="true">170</td><td class="row-total">170</td></tr>
+                    <tr><td>14</td><td contenteditable="true">Foot Scrubber Mat</td><td contenteditable="true">4</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
+                    <tr><td>15</td><td contenteditable="true">Carpet</td><td contenteditable="true">2</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
+                    <tr><td>16</td><td contenteditable="true">Door Curtain</td><td contenteditable="true">4</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
+                    <tr><td>17</td><td contenteditable="true">Floor Cleaning Finail</td><td contenteditable="true">1</td><td contenteditable="true">100</td><td class="row-total">100</td></tr>
+                    <tr><td>18</td><td contenteditable="true">Cleaning Acid</td><td contenteditable="true">1</td><td contenteditable="true">100</td><td class="row-total">100</td></tr>
+                    <tr><td>19</td><td contenteditable="true">Dustbin</td><td contenteditable="true">1</td><td contenteditable="true">NA</td><td class="row-total">NA</td></tr>
                 </tbody>
             </table>
+            <button class="btn add-btn" onclick="addNewRow('tbody-stationery')">+ Add Stationery Item</button>
         </div>
     </div>
 
 </div>
 
 <script>
+    // --- 1. SET YOUR GOOGLE SCRIPT URL HERE ---
+    const WEB_APP_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE"; 
+
+    // --- Page Navigation ---
     function showPage(pageId, btnElement) {
-        // Hide all pages
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(page => {
-            page.classList.remove('active');
-        });
-
-        // Remove active state from all nav buttons
-        const navBtns = document.querySelectorAll('.nav-btn');
-        navBtns.forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        // Show selected page
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
+        if (btnElement) btnElement.classList.add('active');
+    }
 
-        // Highlight active button
-        if (btnElement) {
-            btnElement.classList.add('active');
+    // --- Add New Rows (For 5-column tables: Hardware, Stationery) ---
+    function addNewRow(tbodyId) {
+        const tbody = document.getElementById(tbodyId);
+        const rowCount = tbody.rows.length + 1;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${rowCount}</td>
+            <td contenteditable="true">New Item</td>
+            <td contenteditable="true">1</td>
+            <td contenteditable="true">0</td>
+            <td class="row-total">0</td>
+        `;
+        tbody.appendChild(row);
+    }
+
+    // --- Add New Rows (For 4-column tables: Interior, Promo) ---
+    function addNewRowInterior(tbodyId) {
+        const tbody = document.getElementById(tbodyId);
+        const rowCount = tbody.rows.length + 1;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${rowCount}</td>
+            <td contenteditable="true">New Item</td>
+            <td contenteditable="true">1</td>
+            <td contenteditable="true" class="row-total">0</td>
+        `;
+        tbody.appendChild(row);
+    }
+
+    // --- Save Data to Google Sheets ---
+    async function saveToCloud() {
+        if (WEB_APP_URL === "YOUR_GOOGLE_SCRIPT_URL_HERE") {
+            showStatus("Error: Please add your Google Script URL in the HTML code first!", "error");
+            return;
+        }
+
+        showStatus("Saving to Google Sheets...", "loading");
+
+        const sheetsToSave = [
+            { id: 'table-hardware', name: 'Hardware' },
+            { id: 'table-interior', name: 'Interior' },
+            { id: 'table-promo', name: 'Promo' },
+            { id: 'table-stationery', name: 'Stationery' }
+        ];
+
+        try {
+            for (let sheet of sheetsToSave) {
+                const table = document.getElementById(sheet.id);
+                let rowData = [];
+                
+                // Get Headers
+                let headers = [];
+                let ths = table.querySelectorAll('thead th');
+                ths.forEach(th => headers.push(th.innerText));
+                rowData.push(headers);
+
+                // Get Rows
+                let trs = table.querySelectorAll('tbody tr');
+                trs.forEach(tr => {
+                    let cells = [];
+                    tr.querySelectorAll('td').forEach(td => cells.push(td.innerText));
+                    rowData.push(cells);
+                });
+
+                // Send to Server via POST
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Avoids local cross-origin blocks
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sheetName: sheet.name, rows: rowData })
+                });
+            }
+            showStatus("Backup Successful! All data saved to Google Sheets.", "success");
+        } catch (error) {
+            console.error(error);
+            showStatus("Save Failed. Check console.", "error");
+        }
+    }
+
+    // --- Status Messages ---
+    function showStatus(message, type) {
+        const msgBox = document.getElementById('status-msg');
+        msgBox.innerText = message;
+        msgBox.className = ''; 
+        msgBox.classList.add('status-' + type);
+        msgBox.style.display = 'block';
+        
+        if (type !== 'loading') {
+            setTimeout(() => { msgBox.style.display = 'none'; }, 4000);
         }
     }
 </script>
