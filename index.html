@@ -10,7 +10,7 @@
     
     <style>
         :root {
-            /* Premium Native Dark Theme (Resistant to Dark Mode Extensions) */
+            /* Premium Native Dark Theme */
             --bg-app: #09090b;
             --bg-sidebar: #18181b;
             --bg-card: #18181b;
@@ -51,16 +51,11 @@
         
         /* --- SIDEBAR --- */
         .sidebar { 
-            width: 280px; 
-            background-color: var(--bg-sidebar); 
-            border-right: 1px solid var(--border-light);
-            display: flex; 
-            flex-direction: column; 
-            z-index: 20;
+            width: 280px; background-color: var(--bg-sidebar); 
+            border-right: 1px solid var(--border-light); display: flex; flex-direction: column; z-index: 20;
         }
 
         .brand-container { padding: 32px 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
         .brand-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
         
         .logo-icon {
@@ -74,12 +69,10 @@
         .brand-text p { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;}
 
         .nav-menu { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; padding: 16px; }
-
         .nav-btn { 
-            background: transparent; border: none; color: var(--text-secondary); 
-            font-size: 0.95rem; font-weight: 500; text-align: left; cursor: pointer; 
-            padding: 12px 16px; border-radius: var(--radius-md); transition: all 0.2s ease; 
-            display: flex; align-items: center; gap: 12px; 
+            background: transparent; border: none; color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; 
+            text-align: left; cursor: pointer; padding: 12px 16px; border-radius: var(--radius-md); 
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; 
         }
         .nav-btn:hover { background-color: rgba(255,255,255,0.05); color: var(--text-main); }
         .nav-btn.active { background-color: var(--info-bg); color: var(--info); font-weight: 600; border-left: 3px solid var(--info); }
@@ -87,7 +80,6 @@
         /* --- MAIN CONTENT AREA --- */
         .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; position: relative; overflow-y: auto; }
         
-        /* Loading Overlay */
         #loading-overlay { 
             position: absolute; inset: 0; background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(8px);
             z-index: 50; display: flex; flex-direction: column; justify-content: center; align-items: center; 
@@ -127,18 +119,14 @@
 
         /* --- DASHBOARD CARDS --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
-        
         .metric-card { 
             background: var(--bg-card); padding: 24px; border-radius: var(--radius-xl); 
-            box-shadow: var(--shadow-card); border: 1px solid var(--border-light);
-            display: flex; align-items: center; gap: 20px;
+            box-shadow: var(--shadow-card); border: 1px solid var(--border-light); display: flex; align-items: center; gap: 20px;
         }
-        
         .metric-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
         .icon-blue { background-color: var(--info-bg); color: var(--info); }
         .icon-green { background-color: var(--success-bg); color: var(--success); }
         .icon-red { background-color: var(--danger-bg); color: var(--danger); }
-
         .metric-info h3 { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
         .metric-info p { font-size: 2rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
         .over-budget p { color: var(--danger); }
@@ -155,25 +143,11 @@
         .section-header h2 { font-size: 1.25rem; font-weight: 600; }
         .section-header p { font-size: 0.9rem; color: var(--text-tertiary); margin-top: 4px;}
 
-        .table-card { 
-            background: var(--bg-card); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); 
-            border: 1px solid var(--border-light); overflow: hidden; margin-bottom: 30px; 
-        }
-        
+        .table-card { background: var(--bg-card); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); border: 1px solid var(--border-light); overflow: hidden; margin-bottom: 30px; }
         .table-scroll { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        
-        th { 
-            background-color: rgba(255,255,255,0.02); color: var(--text-secondary); padding: 16px 24px; 
-            font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; 
-            border-bottom: 1px solid var(--border-light); white-space: nowrap;
-        }
-        
-        td { 
-            padding: 16px 24px; border-bottom: 1px solid var(--border-light); 
-            font-size: 0.95rem; color: var(--text-main); vertical-align: middle;
-        }
-        
+        th { background-color: rgba(255,255,255,0.02); color: var(--text-secondary); padding: 16px 24px; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
+        td { padding: 16px 24px; border-bottom: 1px solid var(--border-light); font-size: 0.95rem; color: var(--text-main); vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background-color: rgba(255,255,255,0.02); }
         
@@ -199,6 +173,7 @@
         tr:hover .btn-delete { opacity: 1; }
         .btn-delete:hover { background: var(--danger); color: white; }
 
+        /* Toast Notifications */
         #status-msg { 
             position: fixed; bottom: 32px; right: 32px; padding: 16px 24px; border-radius: var(--radius-lg); 
             color: white; font-weight: 500; display: flex; align-items: center; gap: 12px; 
@@ -219,30 +194,25 @@
             <div class="logo-icon">E</div>
             <div class="brand-text">
                 <h1>Excellent Institute</h1>
-                <p>Live Database v4.0</p>
+                <p>Live Database v4.1</p>
             </div>
         </div>
     </div>
     <nav class="nav-menu">
         <button class="nav-btn active" onclick="showPage('dashboard-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-            Dashboard
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Dashboard
         </button>
         <button class="nav-btn" onclick="showPage('hardware-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            Hardware
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Hardware
         </button>
         <button class="nav-btn" onclick="showPage('furniture-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Interior & Setup
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Interior & Setup
         </button>
         <button class="nav-btn" onclick="showPage('promo-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Promo Materials
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Promo Materials
         </button>
         <button class="nav-btn" onclick="showPage('supplies-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-            Stationery
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Stationery
         </button>
     </nav>
 </aside>
@@ -258,8 +228,7 @@
         <h2 class="header-title" id="current-page-title">Dashboard Overview</h2>
         <div class="header-actions">
             <button class="btn-success" onclick="saveToCloud()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                Sync to Server
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Sync to Server
             </button>
         </div>
     </header>
@@ -300,69 +269,45 @@
         </div>
 
         <div id="hardware-page" class="page" data-title="Hardware Ledger">
-            <div class="section-header">
-                <div><h2>Computer & Lab Equipment</h2><p>Track all hardware purchases and installations.</p></div>
-            </div>
+            <div class="section-header"><div><h2>Computer & Lab Equipment</h2><p>Track all hardware purchases and installations.</p></div></div>
             <div class="table-card">
-                <div class="table-scroll">
-                    <table id="table-hardware"><thead id="thead-hardware"></thead><tbody id="tbody-hardware"></tbody></table>
-                </div>
+                <div class="table-scroll"><table id="table-hardware"><thead id="thead-hardware"></thead><tbody id="tbody-hardware"></tbody></table></div>
                 <div class="table-footer">
-                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Click any cell to edit. Type directly to update math live.</span>
-                    <button class="btn-add" onclick="addNewRow('Hardware', 'tbody-hardware')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row
-                    </button>
+                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Note: Totals are manual. Edit the TOTAL row directly if you change an item price.</span>
+                    <button class="btn-add" onclick="addNewRow('Hardware', 'tbody-hardware')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row</button>
                 </div>
             </div>
         </div>
 
         <div id="furniture-page" class="page" data-title="Interior & Setup Ledger">
-            <div class="section-header">
-                <div><h2>Furniture & Infrastructure</h2><p>Track desks, chairs, electrical, and structural expenses.</p></div>
-            </div>
+            <div class="section-header"><div><h2>Furniture & Infrastructure</h2><p>Track desks, chairs, electrical, and structural expenses.</p></div></div>
             <div class="table-card">
-                <div class="table-scroll">
-                    <table id="table-interior"><thead id="thead-interior"></thead><tbody id="tbody-interior"></tbody></table>
-                </div>
+                <div class="table-scroll"><table id="table-interior"><thead id="thead-interior"></thead><tbody id="tbody-interior"></tbody></table></div>
                 <div class="table-footer">
-                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Click any cell to edit. Type directly to update math live.</span>
-                    <button class="btn-add" onclick="addNewRow('Interior', 'tbody-interior')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row
-                    </button>
+                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Note: Totals are manual. Edit the TOTAL row directly if you change an item price.</span>
+                    <button class="btn-add" onclick="addNewRow('Interior', 'tbody-interior')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row</button>
                 </div>
             </div>
         </div>
 
         <div id="promo-page" class="page" data-title="Marketing Ledger">
-            <div class="section-header">
-                <div><h2>Promotional Materials</h2><p>Track banners, posters, and marketing expenses.</p></div>
-            </div>
+            <div class="section-header"><div><h2>Promotional Materials</h2><p>Track banners, posters, and marketing expenses.</p></div></div>
             <div class="table-card">
-                <div class="table-scroll">
-                    <table id="table-promo"><thead id="thead-promo"></thead><tbody id="tbody-promo"></tbody></table>
-                </div>
+                <div class="table-scroll"><table id="table-promo"><thead id="thead-promo"></thead><tbody id="tbody-promo"></tbody></table></div>
                 <div class="table-footer">
-                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Click any cell to edit. Type directly to update math live.</span>
-                    <button class="btn-add" onclick="addNewRow('Promo', 'tbody-promo')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row
-                    </button>
+                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Note: Totals are manual. Edit the TOTAL row directly if you change an item price.</span>
+                    <button class="btn-add" onclick="addNewRow('Promo', 'tbody-promo')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row</button>
                 </div>
             </div>
         </div>
 
         <div id="supplies-page" class="page" data-title="Operations Ledger">
-            <div class="section-header">
-                <div><h2>Stationery & Cleaning</h2><p>Track daily operational supplies and maintenance items.</p></div>
-            </div>
+            <div class="section-header"><div><h2>Stationery & Cleaning</h2><p>Track daily operational supplies and maintenance items.</p></div></div>
             <div class="table-card">
-                <div class="table-scroll">
-                    <table id="table-stationery"><thead id="thead-stationery"></thead><tbody id="tbody-stationery"></tbody></table>
-                </div>
+                <div class="table-scroll"><table id="table-stationery"><thead id="thead-stationery"></thead><tbody id="tbody-stationery"></tbody></table></div>
                 <div class="table-footer">
-                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Click any cell to edit. Type directly to update math live.</span>
-                    <button class="btn-add" onclick="addNewRow('Stationery', 'tbody-stationery')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row
-                    </button>
+                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Note: Totals are manual. Edit the TOTAL row directly if you change an item price.</span>
+                    <button class="btn-add" onclick="addNewRow('Stationery', 'tbody-stationery')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row</button>
                 </div>
             </div>
         </div>
@@ -379,7 +324,7 @@
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKY1r2RVdlG0DAOkHl108F0sbb80yslLhSaYhWLM982TCFvzyiqpGi3iouyzv28jMQ4A/exec"; 
     const TOTAL_INVESTMENT = 260000;
 
-    // --- FAILSAFE DATA (Only Items, No Totals) ---
+    // --- FULL FAILSAFE DATA WITH TOTALS INCLUDED ---
     const INITIAL_DATA_FAILSAFE = {
         "Hardware": [
             ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
@@ -389,7 +334,8 @@
             [10, "Motherboard", 1, 3700, 3700], [11, "CPU I5 6TH GEN", 1, 3200, 3200], [12, "CPU FAN", 1, 270, 270],
             [13, "RAM 8 GB", 1, 5200, 5200], [14, "SSD 256GB", 1, 3830, 3830], [15, "CABINET GAMING", 1, 1700, 1700],
             [16, "MONITOR", 1, 2000, 2000], [17, "Keyboard & Mouse", 1, 340, 340], [18, "MOUSE PAD", 11, 40, 440],
-            [19, "LAN CABLE (25m)", 1, 750, 750], [20, "16 Port Switch", 1, "NA", "NA"]
+            [19, "LAN CABLE (25m)", 1, 750, 750], [20, "16 Port Switch", 1, "NA", "NA"],
+            ["TOTAL", "", "", "", 155530], ["ADVANCE", "", "", "", 10000], ["BALANCE", "", "", "", 145530]
         ],
         "Interior": [
             ["SL. NO.", "ITEM", "QTY", "AMOUNT (₹)"],
@@ -397,12 +343,14 @@
             [4, "Normal Chair", 3, 900], [5, "Height Adjustable Chair", 1, 3256], [6, "Extension Board", 1, 949],
             [7, "Height Adjustable Laptop Desk", 1, 873], [8, "Electric Work (Fan, Light, Wiring, etc.) *Note: Adjustable with room rent", "NA", 25000],
             [9, "Carpenter Charges", "NA", 17280], [10, "EVO-S 2300 UPS", 1, 10500], [11, "Battery 150 ah", 2, 23000],
-            [12, "Broadband Service", 1, 5000]
+            [12, "Broadband Service", 1, 5000],
+            ["TOTAL", "", "", 108408]
         ],
         "Promo": [
             ["SL. NO.", "ITEM", "QTY", "AMOUNT (₹)"],
             [1, "Banner (4x9 size)", 1, "NA"], [2, "Banner (4x6 size)", 4, "NA"], [3, "Leaflet", 1000, "NA"],
-            [4, "Wall Poster", 500, "NA"], [5, "Standing Banner (4x2 size)", 1, 1500], [6, "Banner (2x3 size)", 2, "NA"]
+            [4, "Wall Poster", 500, "NA"], [5, "Standing Banner (4x2 size)", 1, 1500], [6, "Banner (2x3 size)", 2, "NA"],
+            ["TOTAL COST", "", "", 7000]
         ],
         "Stationery": [
             ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
@@ -412,11 +360,11 @@
             [10, "Pen Packet", 1, 15, 15], [11, "Lock", 1, 120, 120], [12, "Extension Board", 1, 150, 150],
             [13, "Water Dispenser", 1, 170, 170], [14, "Foot Scrubber Mat", 4, "NA", "NA"], [15, "Carpet", 2, "NA", "NA"],
             [16, "Door Curtain", 4, "NA", "NA"], [17, "Floor Cleaning Finail", 1, 100, 100], [18, "Cleaning Acid", 1, 100, 100],
-            [19, "Dustbin", 1, "NA", "NA"]
+            [19, "Dustbin", 1, "NA", "NA"],
+            ["TOTAL COST", "", "", "", 4230]
         ]
     };
 
-    // --- On Load ---
     document.addEventListener("DOMContentLoaded", () => { loadDataFromServer(); });
 
     async function loadDataFromServer() {
@@ -427,7 +375,7 @@
             const response = await fetch(WEB_APP_URL);
             const serverData = await response.json();
             
-            // Check if server data is valid
+            // Check if server actually has valid rows
             if (serverData && serverData['Hardware'] && serverData['Hardware'].length > 1) {
                 finalDataToUse = serverData;
                 isSuccess = true;
@@ -435,7 +383,7 @@
         } catch (error) { console.error("Fetch failed.", error); }
 
         renderAllTables(finalDataToUse);
-        calculateLiveTotals(); // Calculate immediately on load
+        calculateDashboardTotals(); 
         
         document.getElementById('loading-overlay').style.display = 'none';
         if (isSuccess) {
@@ -445,17 +393,16 @@
         }
     }
 
-    // --- Auto Repair ---
+    // --- REPAIR TOOL ---
     function forceRepairDatabase() {
-        if(confirm("This will completely overwrite your Google Sheet with the clean, accurate data (Total: ₹275,168). Continue?")) {
+        if(confirm("This will overwrite your Google Sheet with the 100% accurate default data (Total: ₹275,168). Continue?")) {
             renderAllTables(INITIAL_DATA_FAILSAFE);
-            calculateLiveTotals();
+            calculateDashboardTotals();
             saveToCloud(); 
             showStatus("Repairing database...", "success", "🛠️");
         }
     }
 
-    // --- Dynamic Table Builder ---
     function renderAllTables(dataObj) {
         buildTable('Hardware', dataObj['Hardware']);
         buildTable('Interior', dataObj['Interior']);
@@ -463,6 +410,7 @@
         buildTable('Stationery', dataObj['Stationery']);
     }
 
+    // --- RESTORED TABLE BUILDER (Keeps Manual Totals Editable) ---
     function buildTable(sheetName, sheetData) {
         let tbodyId = `tbody-${sheetName.toLowerCase()}`;
         let theadId = `thead-${sheetName.toLowerCase()}`;
@@ -473,7 +421,6 @@
         tbody.innerHTML = ''; thead.innerHTML = '';
         if (!sheetData || sheetData.length === 0) return;
 
-        // Build Header
         const headerRow = sheetData[0];
         let theadHTML = "<tr>";
         headerRow.forEach(text => { theadHTML += `<th>${text}</th>`; });
@@ -482,76 +429,69 @@
 
         let colspan = headerRow.length - 1;
 
-        // Build Items (Ignoring broken total rows from server)
         for (let i = 1; i < sheetData.length; i++) {
             const rowData = sheetData[i];
-            const firstCellText = String(rowData[0]).toUpperCase();
-            
-            if (firstCellText.includes("TOTAL") || firstCellText.includes("ADVANCE") || firstCellText.includes("BALANCE")) continue;
-
-            let rowHTML = "";
-            rowData.forEach((cellData, index) => {
-                const editable = index > 0 ? 'contenteditable="true"' : '';
-                rowHTML += `<td ${editable} oninput="calculateLiveTotals()">${cellData}</td>`;
-            });
-            rowHTML += `<td><button class="btn-delete" onclick="deleteRow(this)" title="Delete Row">×</button></td>`;
-            
             const tr = document.createElement('tr');
-            tr.innerHTML = rowHTML;
+            
+            const firstCellText = String(rowData[0]).toUpperCase();
+            if (firstCellText.includes("TOTAL") || firstCellText.includes("ADVANCE") || firstCellText.includes("BALANCE")) {
+                tr.className = firstCellText.includes("BALANCE") ? "summary-row balance-row" : "summary-row";
+                
+                // Editable Summary Rows
+                let cellHTML = `<td colspan="${colspan}" class="text-right">${rowData[0]}</td>`;
+                cellHTML += `<td contenteditable="true" oninput="calculateDashboardTotals()">${rowData[rowData.length - 1]}</td><td></td>`; 
+                tr.innerHTML = cellHTML;
+            } else {
+                let rowHTML = "";
+                rowData.forEach((cellData, index) => {
+                    const editable = index > 0 ? 'contenteditable="true"' : '';
+                    rowHTML += `<td ${editable}>${cellData}</td>`;
+                });
+                rowHTML += `<td><button class="btn-delete" onclick="deleteRow(this)" title="Delete Row">×</button></td>`;
+                tr.innerHTML = rowHTML;
+            }
             tbody.appendChild(tr);
-        }
-
-        // Append Dynamic Math Rows at the bottom
-        if (sheetName === 'Hardware') {
-            let summaryHTML = `<tr class="summary-row"><td colspan="${colspan}" class="text-right">TOTAL</td><td id="hw-sheet-total" class="font-bold">₹0</td><td></td></tr>`;
-            summaryHTML += `<tr class="summary-row"><td colspan="${colspan}" class="text-right">ADVANCE</td><td id="hw-advance-input" contenteditable="true" oninput="calculateLiveTotals()">10000</td><td></td></tr>`;
-            summaryHTML += `<tr class="summary-row balance-row"><td colspan="${colspan}" class="text-right">BALANCE</td><td id="hw-balance-total">₹0</td><td></td></tr>`;
-            tbody.insertAdjacentHTML('beforeend', summaryHTML);
-        } else if (sheetName === 'Interior') {
-            tbody.insertAdjacentHTML('beforeend', `<tr class="summary-row"><td colspan="${colspan}" class="text-right">TOTAL</td><td id="int-sheet-total" class="font-bold">₹0</td><td></td></tr>`);
-        } else if (sheetName === 'Promo') {
-            tbody.insertAdjacentHTML('beforeend', `<tr class="summary-row"><td colspan="${colspan}" class="text-right">TOTAL COST</td><td id="pro-sheet-total" class="font-bold">₹0</td><td></td></tr>`);
-        } else if (sheetName === 'Stationery') {
-            tbody.insertAdjacentHTML('beforeend', `<tr class="summary-row"><td colspan="${colspan}" class="text-right">TOTAL COST</td><td id="sta-sheet-total" class="font-bold">₹0</td><td></td></tr>`);
         }
     }
 
-    // --- LIVE MATH ENGINE (Never Double Counts) ---
-    function calculateLiveTotals() {
+    // --- RESTORED DASHBOARD MATH (Extracts directly from the "TOTAL" cells on screen) ---
+    function calculateDashboardTotals() {
         let grandTotal = 0;
+        const tables = ['table-hardware', 'table-interior', 'table-promo', 'table-stationery'];
         
-        // 1. Hardware Math
-        let hwTotal = sumTableItems('tbody-hardware');
-        let hwAdvanceEl = document.getElementById('hw-advance-input');
-        let hwAdvance = hwAdvanceEl ? (parseFloat(hwAdvanceEl.innerText.replace(/[^\d.-]/g, '')) || 0) : 10000;
-        
-        let hwTotalEl = document.getElementById('hw-sheet-total');
-        if(hwTotalEl) hwTotalEl.innerText = '₹' + hwTotal.toLocaleString();
-        
-        let hwBalEl = document.getElementById('hw-balance-total');
-        if(hwBalEl) hwBalEl.innerText = '₹' + (hwTotal - hwAdvance).toLocaleString();
-        
-        grandTotal += hwTotal;
+        tables.forEach(tableId => {
+            const table = document.getElementById(tableId);
+            if(table) {
+                const rows = Array.from(table.querySelectorAll('tr.summary-row'));
+                const totalRow = rows.find(r => {
+                    let txt = String(r.cells[0].innerText).toUpperCase();
+                    return txt === 'TOTAL' || txt === 'TOTAL COST';
+                });
+                
+                if (totalRow && totalRow.cells[1]) {
+                    let cleanStr = totalRow.cells[1].innerText.replace(/[^\d.-]/g, '');
+                    let val = parseFloat(cleanStr);
+                    if(!isNaN(val)) grandTotal += val;
+                }
+            }
+        });
 
-        // 2. Interior Math
-        let intTotal = sumTableItems('tbody-interior');
-        let intTotalEl = document.getElementById('int-sheet-total');
-        if(intTotalEl) intTotalEl.innerText = '₹' + intTotal.toLocaleString();
-        grandTotal += intTotal;
+        // Hardware Specific Math (Total - Advance = Balance)
+        const hwTable = document.getElementById('table-hardware');
+        if (hwTable) {
+            const summaryRows = Array.from(hwTable.querySelectorAll('tr.summary-row'));
+            const tRow = summaryRows.find(r => r.cells[0].innerText.toUpperCase() === 'TOTAL');
+            const aRow = summaryRows.find(r => r.cells[0].innerText.toUpperCase() === 'ADVANCE');
+            const bRow = summaryRows.find(r => r.cells[0].innerText.toUpperCase() === 'BALANCE');
+            
+            if (tRow && aRow && bRow) {
+                let t = parseFloat(tRow.cells[1].innerText.replace(/[^\d.-]/g, '')) || 0;
+                let a = parseFloat(aRow.cells[1].innerText.replace(/[^\d.-]/g, '')) || 0;
+                bRow.cells[1].innerText = t - a;
+            }
+        }
 
-        // 3. Promo Math
-        let proTotal = sumTableItems('tbody-promo');
-        let proTotalEl = document.getElementById('pro-sheet-total');
-        if(proTotalEl) proTotalEl.innerText = '₹' + proTotal.toLocaleString();
-        grandTotal += proTotal;
-
-        // 4. Stationery Math
-        let staTotal = sumTableItems('tbody-stationery');
-        let staTotalEl = document.getElementById('sta-sheet-total');
-        if(staTotalEl) staTotalEl.innerText = '₹' + staTotal.toLocaleString();
-        grandTotal += staTotal;
-
-        // 5. Update Dashboard Live
+        // Update Dashboard GUI
         document.getElementById('dash-spent').innerText = '₹' + grandTotal.toLocaleString();
         let netBalance = TOTAL_INVESTMENT - grandTotal;
         let balEl = document.getElementById('dash-balance');
@@ -566,36 +506,17 @@
         }
     }
 
-    // Sums up only the raw items in a table (ignoring the dynamic totals)
-    function sumTableItems(tbodyId) {
-        let tbody = document.getElementById(tbodyId);
-        if (!tbody) return 0;
-        let sum = 0;
-        let rows = Array.from(tbody.querySelectorAll('tr')).filter(tr => !tr.classList.contains('summary-row'));
-        
-        rows.forEach(tr => {
-            let cells = tr.querySelectorAll('td');
-            if (cells.length >= 2) {
-                let valCell = cells[cells.length - 2]; // Always target the column right before the delete button
-                let cleanStr = valCell.innerText.replace(/[^\d.-]/g, '');
-                let val = parseFloat(cleanStr);
-                if (!isNaN(val)) sum += val;
-            }
-        });
-        return sum;
-    }
-
     // --- UI Interactions ---
     function addNewRow(sheetType, tbodyId) {
         const tbody = document.getElementById(tbodyId);
         const dataRows = Array.from(tbody.rows).filter(r => !r.classList.contains('summary-row'));
         const rowCount = dataRows.length + 1;
         
-        let rowHTML = `<td oninput="calculateLiveTotals()">${rowCount}</td><td contenteditable="true" oninput="calculateLiveTotals()">New Item</td><td contenteditable="true" oninput="calculateLiveTotals()">1</td>`;
+        let rowHTML = `<td>${rowCount}</td><td contenteditable="true">New Item</td><td contenteditable="true">1</td>`;
         if (sheetType === 'Hardware' || sheetType === 'Stationery') {
-            rowHTML += `<td contenteditable="true" oninput="calculateLiveTotals()">0</td><td contenteditable="true" oninput="calculateLiveTotals()">0</td>`;
+            rowHTML += `<td contenteditable="true">0</td><td contenteditable="true">0</td>`;
         } else {
-            rowHTML += `<td contenteditable="true" oninput="calculateLiveTotals()">0</td>`;
+            rowHTML += `<td contenteditable="true">0</td>`;
         }
         rowHTML += `<td><button class="btn-delete" onclick="deleteRow(this)">×</button></td>`;
         
@@ -614,7 +535,6 @@
         const tbody = btn.closest('tr').parentNode;
         btn.closest('tr').remove();
         updateSlNumbers(tbody);
-        calculateLiveTotals(); // Recalculate immediately
     }
 
     function updateSlNumbers(tbody) {
@@ -631,7 +551,7 @@
         if (btnElement) btnElement.classList.add('active');
     }
 
-    // --- Database Save Logic (Strips totals so they don't duplicate on Server) ---
+    // --- RESTORED DATABASE SAVER (Safely saves summary rows) ---
     async function saveToCloud() {
         showStatus("Saving to Google...", "loading", "⏳");
         const sheetsToSave = [
@@ -652,12 +572,19 @@
 
                 let trs = table.querySelectorAll('tbody tr');
                 trs.forEach(tr => {
-                    // WE DO NOT SAVE SUMMARY ROWS TO THE DB ANYMORE. This prevents duplication.
-                    if (tr.classList.contains('summary-row')) return; 
-
                     let cells = [];
-                    let tds = Array.from(tr.cells).slice(0, -1);
-                    tds.forEach(td => cells.push(td.innerText.replace(/\n/g, " ").trim()));
+                    // Extract colspans correctly so it writes perfectly to Google Sheets
+                    if (tr.classList.contains('summary-row')) {
+                        let td1 = tr.cells[0];
+                        let td2 = tr.cells[1]; 
+                        let colSpan = parseInt(td1.getAttribute('colspan') || 1);
+                        cells.push(td1.innerText);
+                        for(let i=1; i<colSpan; i++) cells.push("");
+                        cells.push(td2.innerText);
+                    } else {
+                        let tds = Array.from(tr.cells).slice(0, -1);
+                        tds.forEach(td => cells.push(td.innerText.replace(/\n/g, " ").trim()));
+                    }
                     rowData.push(cells);
                 });
 
