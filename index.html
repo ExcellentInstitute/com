@@ -236,36 +236,134 @@
     // Constants
     const TOTAL_INVESTMENT = 260000;
 
+    // --- FAILSAFE MEMORY: YOUR INITIAL DATA ---
+    // If the server is empty or fails, this data loads automatically so you never lose it.
+    const INITIAL_DATA_FAILSAFE = {
+        "Hardware": [
+            ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
+            [1, "Motherboard", 10, 1600, 16000],
+            [2, "CPU I5 3RD GEN", 10, 1670, 16700],
+            [3, "CPU FAN", 10, 270, 2700],
+            [4, "RAM 4 GB", 10, 950, 9500],
+            [5, "SSD 256GB", 10, 3830, 38300],
+            [6, "CABINET", 10, 1700, 17000],
+            [7, "MONITOR", 10, 2000, 20000],
+            [8, "Keyboard & Mouse", 10, 340, 3400],
+            [9, "CANON G2010 PRINTER", 1, 10500, 10500],
+            [10, "Motherboard", 1, 3700, 3700],
+            [11, "CPU I5 6TH GEN", 1, 3200, 3200],
+            [12, "CPU FAN", 1, 270, 270],
+            [13, "RAM 8 GB", 1, 5200, 5200],
+            [14, "SSD 256GB", 1, 3830, 3830],
+            [15, "CABINET GAMING", 1, 1700, 1700],
+            [16, "MONITOR", 1, 2000, 2000],
+            [17, "Keyboard & Mouse", 1, 340, 340],
+            [18, "MOUSE PAD", 11, 40, 440],
+            [19, "LAN CABLE (25m)", 1, 750, 750],
+            [20, "16 Port Switch", 1, "NA", "NA"],
+            ["TOTAL", "", "", "", 155530],
+            ["ADVANCE", "", "", "", 10000],
+            ["BALANCE", "", "", "", 145530]
+        ],
+        "Interior": [
+            ["SL. NO.", "ITEM", "QTY", "AMOUNT (₹)"],
+            [1, "Table", 3, 18375],
+            [2, "Switch Board", 7, 675],
+            [3, "Stool", 10, 2600],
+            [4, "Normal Chair", 3, 900],
+            [5, "Height Adjustable Chair", 1, 3256],
+            [6, "Extension Board", 1, 949],
+            [7, "Height Adjustable Laptop Desk", 1, 873],
+            [8, "Electric Work (Fan, Light, Wiring, etc.) *Note: Adjustable with room rent", "NA", 25000],
+            [9, "Carpenter Charges", "NA", 17280],
+            [10, "EVO-S 2300 UPS", 1, 10500],
+            [11, "Battery 150 ah", 2, 23000],
+            [12, "Broadband Service", 1, 5000],
+            ["TOTAL", "", "", 108408]
+        ],
+        "Promo": [
+            ["SL. NO.", "ITEM", "QTY", "AMOUNT (₹)"],
+            [1, "Banner (4x9 size)", 1, "NA"],
+            [2, "Banner (4x6 size)", 4, "NA"],
+            [3, "Leaflet", 1000, "NA"],
+            [4, "Wall Poster", 500, "NA"],
+            [5, "Standing Banner (4x2 size)", 1, 1500],
+            [6, "Banner (2x3 size)", 2, "NA"],
+            ["TOTAL COST", "", "", 7000]
+        ],
+        "Stationery": [
+            ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
+            [1, "White Board", 1, 2735, 2735],
+            [2, "Marker", 2, 50, 100],
+            [3, "Duster", 1, 75, 75],
+            [4, "Mop", 1, 160, 160],
+            [5, "Broom", 1, 60, 60],
+            [6, "Register", 2, 110, 220],
+            [7, "GSM Paper Bundle", 1, 175, 175],
+            [8, "Normal Paper Bundle", 1, "NA", "NA"],
+            [9, "Dust Pan", 1, 50, 50],
+            [10, "Pen Packet", 1, 15, 15],
+            [11, "Lock", 1, 120, 120],
+            [12, "Extension Board", 1, 150, 150],
+            [13, "Water Dispenser", 1, 170, 170],
+            [14, "Foot Scrubber Mat", 4, "NA", "NA"],
+            [15, "Carpet", 2, "NA", "NA"],
+            [16, "Door Curtain", 4, "NA", "NA"],
+            [17, "Floor Cleaning Finail", 1, 100, 100],
+            [18, "Cleaning Acid", 1, 100, 100],
+            [19, "Dustbin", 1, "NA", "NA"],
+            ["TOTAL COST", "", "", "", 4230]
+        ]
+    };
+
     // --- On Load: Fetch Data ---
     document.addEventListener("DOMContentLoaded", () => {
         loadDataFromServer();
     });
 
     async function loadDataFromServer() {
-        if (!WEB_APP_URL || WEB_APP_URL === "YOUR_GOOGLE_SCRIPT_URL_HERE") {
-            document.getElementById('loading-overlay').innerHTML = "<h3>Configuration Error</h3><p>Please insert your Web App URL into the HTML file.</p>";
-            return;
-        }
+        let finalDataToUse = INITIAL_DATA_FAILSAFE;
+        let isSuccess = false;
 
         try {
-            // Using GET request defined in Apps Script
+            // Fetch from Google Sheet
             const response = await fetch(WEB_APP_URL);
-            const data = await response.json();
+            const serverData = await response.json();
             
-            buildTable('Hardware', data['Hardware']);
-            buildTable('Interior', data['Interior']);
-            buildTable('Promo', data['Promo']);
-            buildTable('Stationery', data['Stationery']);
-            
-            calculateDashboardTotals(data);
-            
-            // Hide loading overlay
-            document.getElementById('loading-overlay').style.display = 'none';
-            showStatus("Database Connected!", "success", "✅");
+            // Validate that the server didn't just send empty arrays because of the failed save
+            let hasRealData = false;
+            for (let sheetName in serverData) {
+                // If a sheet has more than just the header row, we consider it valid data
+                if (serverData[sheetName] && serverData[sheetName].length > 1) {
+                    hasRealData = true;
+                    break;
+                }
+            }
+
+            if (hasRealData) {
+                finalDataToUse = serverData;
+                isSuccess = true;
+            } else {
+                console.warn("Server returned empty sheets. Falling back to failsafe data.");
+            }
 
         } catch (error) {
-            console.error(error);
-            document.getElementById('loading-overlay').innerHTML = "<h3>Connection Failed</h3><p>Could not reach the Google Sheet server. Check your internet connection or URL.</p>";
+            console.error("Fetch failed. Falling back to failsafe data.", error);
+        }
+
+        // Build the UI
+        buildTable('Hardware', finalDataToUse['Hardware']);
+        buildTable('Interior', finalDataToUse['Interior']);
+        buildTable('Promo', finalDataToUse['Promo']);
+        buildTable('Stationery', finalDataToUse['Stationery']);
+        calculateDashboardTotals(finalDataToUse);
+        
+        document.getElementById('loading-overlay').style.display = 'none';
+
+        if (isSuccess) {
+            showStatus("Database Connected!", "success", "✅");
+        } else {
+            showStatus("Loaded Initial Data", "warning", "⚠️");
         }
     }
 
@@ -293,27 +391,27 @@
         headerRow.forEach(text => { theadHTML += `<th>${text}</th>`; });
         theadHTML += "<th></th>"; // Extra column for delete button
         theadHTML += "</tr>";
-        thead.innerHTML = madeHeaderReadable(theadHTML);
+        thead.innerHTML = theadHTML;
 
         // Build Rows
         for (let i = 1; i < sheetData.length; i++) {
             const rowData = sheetData[i];
             const tr = document.createElement('tr');
             
-            // Determine if it's a summary row based on the first cell text
+            // Detect summary rows (Total, Advance, Balance)
             const firstCellText = String(rowData[0]).toUpperCase();
             if (firstCellText.includes("TOTAL") || firstCellText.includes("ADVANCE") || firstCellText.includes("BALANCE")) {
                 tr.className = firstCellText.includes("BALANCE") ? "summary-row balance-row" : "summary-row";
-                // Handle colspan manually for summary rows (assumes specific structure)
-                let cellHTML = `<td colspan="${headerRow.length - 1}">${rowData[0]}</td>`;
-                cellHTML += `<td>${rowData[rowData.length - 1]}</td>`;
-                cellHTML += `<td></td>`; // No delete button on summary
+                
+                // Construct summary row correctly spanning empty cells
+                let cellHTML = `<td colspan="${headerRow.length - 1}" style="text-align: right; padding-right: 20px;">${rowData[0]}</td>`;
+                cellHTML += `<td>${rowData[rowData.length - 1]}</td>`; // The actual numeric total
+                cellHTML += `<td></td>`; 
                 tr.innerHTML = cellHTML;
             } else {
                 // Regular Data Row
                 let rowHTML = "";
                 rowData.forEach((cellData, index) => {
-                    // Make columns editable (except SL NO, usually index 0)
                     const editable = index > 0 ? 'contenteditable="true"' : '';
                     rowHTML += `<td ${editable}>${cellData}</td>`;
                 });
@@ -324,24 +422,19 @@
         }
     }
 
-    // Helper to fix specific formatting in headers if needed
-    function madeHeaderReadable(html) {
-        return html; // Currently passthrough
-    }
-
     // --- Dashboard Calculation ---
     function calculateDashboardTotals(allData) {
         let grandTotalSpent = 0;
 
-        // Loop through the data array to find the TOTAL rows
         ['Hardware', 'Interior', 'Promo', 'Stationery'].forEach(sheetName => {
             const sheetData = allData[sheetName];
             if (sheetData) {
-                // Look for the row where the first column contains "TOTAL"
+                // Find the row containing TOTAL
                 const totalRow = sheetData.find(row => String(row[0]).toUpperCase().includes('TOTAL'));
                 if (totalRow) {
-                    // The actual numeric total is always in the last column
-                    const val = parseFloat(totalRow[totalRow.length - 1]);
+                    // Extract the number from the last column, stripping any commas
+                    let numericStr = String(totalRow[totalRow.length - 1]).replace(/,/g, '');
+                    const val = parseFloat(numericStr);
                     if (!isNaN(val)) grandTotalSpent += val;
                 }
             }
@@ -367,7 +460,6 @@
         const dataRows = Array.from(tbody.rows).filter(r => !r.classList.contains('summary-row'));
         const rowCount = dataRows.length + 1;
         
-        // Determine column count based on table type
         let rowHTML = `<td>${rowCount}</td><td contenteditable="true">New Item</td><td contenteditable="true">1</td>`;
         if (sheetType === 'Hardware' || sheetType === 'Stationery') {
             rowHTML += `<td contenteditable="true">0</td><td contenteditable="true">0</td>`;
@@ -379,13 +471,11 @@
         const row = document.createElement('tr');
         row.innerHTML = rowHTML;
         
-        // Insert right before summary rows
         if(dataRows.length > 0) {
              tbody.insertBefore(row, dataRows[dataRows.length - 1].nextSibling);
         } else {
-             tbody.prepend(row); // If table is empty
+             tbody.prepend(row); 
         }
-        
         updateSlNumbers(tbody);
     }
 
@@ -429,22 +519,18 @@
                 const table = document.getElementById(sheet.id);
                 let rowData = [];
                 
-                // Get Headers (ignore the last header which is just for the delete button)
                 let headers = [];
                 let ths = Array.from(table.querySelectorAll('thead th'));
                 ths.slice(0, -1).forEach(th => headers.push(th.innerText));
                 rowData.push(headers);
 
-                // Get Rows
                 let trs = table.querySelectorAll('tbody tr');
                 trs.forEach(tr => {
                     let cells = [];
-                    // Summary rows have colspans, handle carefully
                     if (tr.classList.contains('summary-row')) {
                         let td1 = tr.cells[0];
-                        let td2 = tr.cells[1]; // The actual total value
+                        let td2 = tr.cells[1]; 
                         
-                        // Push empty strings to align with header columns
                         let paddedCells = [];
                         let colSpan = parseInt(td1.getAttribute('colspan') || 1);
                         paddedCells.push(td1.innerText);
@@ -453,23 +539,21 @@
                         
                         rowData.push(paddedCells);
                     } else {
-                        // Normal rows, ignore the last cell (delete button)
                         let tds = Array.from(tr.cells);
                         tds.slice(0, -1).forEach(td => cells.push(td.innerText.replace(/\n/g, " ")));
                         rowData.push(cells);
                     }
                 });
 
-                // Send to Server
+                // CHANGED: Using text/plain prevents the CORS block from the browser entirely
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors', 
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({ sheetName: sheet.name, rows: rowData })
                 });
             }
             
-            // Reload data to ensure everything is in sync and totals are updated
+            // Reload to recalculate dashboard
             await loadDataFromServer();
             showStatus("Sync Complete!", "success", "✅");
             
