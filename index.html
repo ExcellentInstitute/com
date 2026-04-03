@@ -107,7 +107,7 @@
 <aside class="sidebar">
     <div class="brand">
         <h1>Excellent Institute</h1>
-        <p>Live Database v3.0</p>
+        <p>Live Database v3.1</p>
     </div>
     <nav class="nav-menu">
         <button class="nav-btn active" onclick="showPage('dashboard-page', this)">📊 Dashboard</button>
@@ -237,7 +237,6 @@
     const TOTAL_INVESTMENT = 260000;
 
     // --- FAILSAFE MEMORY: YOUR INITIAL DATA ---
-    // If the server is empty or fails, this data loads automatically so you never lose it.
     const INITIAL_DATA_FAILSAFE = {
         "Hardware": [
             ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
@@ -326,14 +325,11 @@
         let isSuccess = false;
 
         try {
-            // Fetch from Google Sheet
             const response = await fetch(WEB_APP_URL);
             const serverData = await response.json();
             
-            // Validate that the server didn't just send empty arrays because of the failed save
             let hasRealData = false;
             for (let sheetName in serverData) {
-                // If a sheet has more than just the header row, we consider it valid data
                 if (serverData[sheetName] && serverData[sheetName].length > 1) {
                     hasRealData = true;
                     break;
@@ -351,7 +347,6 @@
             console.error("Fetch failed. Falling back to failsafe data.", error);
         }
 
-        // Build the UI
         buildTable('Hardware', finalDataToUse['Hardware']);
         buildTable('Interior', finalDataToUse['Interior']);
         buildTable('Promo', finalDataToUse['Promo']);
@@ -389,7 +384,7 @@
         const headerRow = sheetData[0];
         let theadHTML = "<tr>";
         headerRow.forEach(text => { theadHTML += `<th>${text}</th>`; });
-        theadHTML += "<th></th>"; // Extra column for delete button
+        theadHTML += "<th></th>"; 
         theadHTML += "</tr>";
         thead.innerHTML = theadHTML;
 
@@ -398,18 +393,15 @@
             const rowData = sheetData[i];
             const tr = document.createElement('tr');
             
-            // Detect summary rows (Total, Advance, Balance)
             const firstCellText = String(rowData[0]).toUpperCase();
             if (firstCellText.includes("TOTAL") || firstCellText.includes("ADVANCE") || firstCellText.includes("BALANCE")) {
                 tr.className = firstCellText.includes("BALANCE") ? "summary-row balance-row" : "summary-row";
                 
-                // Construct summary row correctly spanning empty cells
                 let cellHTML = `<td colspan="${headerRow.length - 1}" style="text-align: right; padding-right: 20px;">${rowData[0]}</td>`;
-                cellHTML += `<td>${rowData[rowData.length - 1]}</td>`; // The actual numeric total
+                cellHTML += `<td>${rowData[rowData.length - 1]}</td>`; 
                 cellHTML += `<td></td>`; 
                 tr.innerHTML = cellHTML;
             } else {
-                // Regular Data Row
                 let rowHTML = "";
                 rowData.forEach((cellData, index) => {
                     const editable = index > 0 ? 'contenteditable="true"' : '';
@@ -422,20 +414,29 @@
         }
     }
 
-    // --- Dashboard Calculation ---
+    // --- Dashboard Calculation (BULLETPROOF VERSION) ---
     function calculateDashboardTotals(allData) {
         let grandTotalSpent = 0;
 
         ['Hardware', 'Interior', 'Promo', 'Stationery'].forEach(sheetName => {
             const sheetData = allData[sheetName];
-            if (sheetData) {
-                // Find the row containing TOTAL
+            
+            if (sheetData && sheetData.length > 0) {
                 const totalRow = sheetData.find(row => String(row[0]).toUpperCase().includes('TOTAL'));
+                
                 if (totalRow) {
-                    // Extract the number from the last column, stripping any commas
-                    let numericStr = String(totalRow[totalRow.length - 1]).replace(/,/g, '');
-                    const val = parseFloat(numericStr);
-                    if (!isNaN(val)) grandTotalSpent += val;
+                    let foundValue = 0;
+
+                    for (let i = totalRow.length - 1; i >= 1; i--) {
+                        let cleanStr = String(totalRow[i]).replace(/[₹$,\s]/g, '');
+                        let val = parseFloat(cleanStr);
+
+                        if (!isNaN(val) && cleanStr !== '') {
+                            foundValue = val;
+                            break; 
+                        }
+                    }
+                    grandTotalSpent += foundValue;
                 }
             }
         });
@@ -545,7 +546,6 @@
                     }
                 });
 
-                // CHANGED: Using text/plain prevents the CORS block from the browser entirely
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -553,7 +553,6 @@
                 });
             }
             
-            // Reload to recalculate dashboard
             await loadDataFromServer();
             showStatus("Sync Complete!", "success", "✅");
             
