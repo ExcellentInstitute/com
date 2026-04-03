@@ -107,7 +107,7 @@
 <aside class="sidebar">
     <div class="brand">
         <h1>Excellent Institute</h1>
-        <p>Live Database v3.1</p>
+        <p>Live Database v3.2</p>
     </div>
     <nav class="nav-menu">
         <button class="nav-btn active" onclick="showPage('dashboard-page', this)">📊 Dashboard</button>
@@ -153,7 +153,7 @@
             <div class="card" style="background: linear-gradient(135deg, var(--primary), #818cf8); color: white; border: none;">
                 <h3 style="color: rgba(255,255,255,0.8);">System is Online</h3>
                 <p style="font-size: 1.1rem; font-weight: 400; margin-top: 10px;">
-                    This app is now directly connected to your Google Sheet. It will load fresh data every time you open it. Remember to click <strong>Sync to Server</strong> to save any edits or new rows.
+                    This app is now connected to your Google Sheet. If this is your first time loading the new system, click <strong>Sync to Server</strong> to securely establish your database.
                 </p>
             </div>
         </div>
@@ -236,7 +236,8 @@
     // Constants
     const TOTAL_INVESTMENT = 260000;
 
-    // --- FAILSAFE MEMORY: YOUR INITIAL DATA ---
+    // --- FAILSAFE MEMORY: YOUR EXACT INITIAL DATA ---
+    // If your Google Sheet is empty or broken, this saves you.
     const INITIAL_DATA_FAILSAFE = {
         "Hardware": [
             ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
@@ -328,29 +329,24 @@
             const response = await fetch(WEB_APP_URL);
             const serverData = await response.json();
             
-            let hasRealData = false;
-            for (let sheetName in serverData) {
-                if (serverData[sheetName] && serverData[sheetName].length > 1) {
-                    hasRealData = true;
-                    break;
-                }
-            }
-
-            if (hasRealData) {
-                finalDataToUse = serverData;
+            // STRICT CHECK: Does the server actually have our specific tabs?
+            // If the sheet is brand new, it won't have 'Hardware', it will just have 'Sheet1'.
+            if (serverData && (serverData['Hardware'] || serverData['Interior'] || serverData['Stationery'])) {
+                // Merge real data over the failsafe
+                finalDataToUse = { ...INITIAL_DATA_FAILSAFE, ...serverData };
                 isSuccess = true;
             } else {
-                console.warn("Server returned empty sheets. Falling back to failsafe data.");
+                console.warn("Google Sheet is empty or missing tabs. Using Failsafe Memory.");
             }
-
         } catch (error) {
-            console.error("Fetch failed. Falling back to failsafe data.", error);
+            console.error("Fetch failed. Using Failsafe Memory.", error);
         }
 
         buildTable('Hardware', finalDataToUse['Hardware']);
         buildTable('Interior', finalDataToUse['Interior']);
         buildTable('Promo', finalDataToUse['Promo']);
         buildTable('Stationery', finalDataToUse['Stationery']);
+        
         calculateDashboardTotals(finalDataToUse);
         
         document.getElementById('loading-overlay').style.display = 'none';
@@ -358,7 +354,8 @@
         if (isSuccess) {
             showStatus("Database Connected!", "success", "✅");
         } else {
-            showStatus("Loaded Initial Data", "warning", "⚠️");
+            // This tells the user exactly what is happening
+            showStatus("Loaded Failsafe Data. Click Sync!", "warning", "⚠️");
         }
     }
 
@@ -414,21 +411,27 @@
         }
     }
 
-    // --- Dashboard Calculation (BULLETPROOF VERSION) ---
+    // --- BULLETPROOF MATH CALCULATOR ---
     function calculateDashboardTotals(allData) {
         let grandTotalSpent = 0;
 
-        ['Hardware', 'Interior', 'Promo', 'Stationery'].forEach(sheetName => {
+        // Search EVERY tab currently loaded, regardless of name
+        for (let sheetName in allData) {
             const sheetData = allData[sheetName];
             
-            if (sheetData && sheetData.length > 0) {
-                const totalRow = sheetData.find(row => String(row[0]).toUpperCase().includes('TOTAL'));
+            if (Array.isArray(sheetData) && sheetData.length > 0) {
+                // Hunt for ANY row where a cell contains the word "TOTAL"
+                const totalRow = sheetData.find(row => 
+                    Array.isArray(row) && row.some(cell => String(cell).toUpperCase().includes('TOTAL'))
+                );
                 
                 if (totalRow) {
                     let foundValue = 0;
-
+                    
+                    // Scan the row backwards to find the actual number, ignoring ghost columns
                     for (let i = totalRow.length - 1; i >= 1; i--) {
-                        let cleanStr = String(totalRow[i]).replace(/[₹$,\s]/g, '');
+                        // Aggressively strip symbols (₹, commas, spaces, letters)
+                        let cleanStr = String(totalRow[i]).replace(/[^\d.-]/g, '');
                         let val = parseFloat(cleanStr);
 
                         if (!isNaN(val) && cleanStr !== '') {
@@ -439,7 +442,7 @@
                     grandTotalSpent += foundValue;
                 }
             }
-        });
+        }
 
         const netBalance = TOTAL_INVESTMENT - grandTotalSpent;
 
