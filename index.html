@@ -271,7 +271,7 @@
 
 <script>
     // --- 1. SET YOUR GOOGLE SCRIPT URL HERE ---
-    const WEB_APP_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE"; 
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKY1r2RVdlG0DAOkHl108F0sbb80yslLhSaYhWLM982TCFvzyiqpGi3iouyzv28jMQ4A/exec"; 
 
     // --- Page Navigation ---
     function showPage(pageId, btnElement) {
@@ -312,7 +312,7 @@
 
     // --- Save Data to Google Sheets ---
     async function saveToCloud() {
-        if (WEB_APP_URL === "YOUR_GOOGLE_SCRIPT_URL_HERE") {
+        if (WEB_APP_URL === "https://script.google.com/macros/s/AKfycbxKY1r2RVdlG0DAOkHl108F0sbb80yslLhSaYhWLM982TCFvzyiqpGi3iouyzv28jMQ4A/exec") {
             showStatus("Error: Please add your Google Script URL in the HTML code first!", "error");
             return;
         }
