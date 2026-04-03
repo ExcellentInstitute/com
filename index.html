@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excellent Institute - Interactive Tracker</title>
+    <title>Excellent Institute - Expenditure Tracker</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -120,15 +120,15 @@
             </div>
             <div class="card">
                 <h3>Total Spent (All Bills)</h3>
-                <p>₹275,028</p>
+                <p>₹275,168</p>
             </div>
             <div class="card">
                 <h3>Net Balance</h3>
-                <p class="over-budget">-₹15,028</p>
+                <p class="over-budget">-₹15,168</p>
             </div>
         </div>
         <div class="table-container">
-            <p><strong>Note:</strong> You can now edit the cells in the tables directly. Click "Backup to Server" when you are done making changes to save them to Google Sheets.</p>
+            <p><strong>Note:</strong> You can edit the cells in the tables directly. Click "Backup to Server" when you are done making changes to save them to your Google Sheet.</p>
         </div>
     </div>
 
@@ -270,7 +270,7 @@
 </div>
 
 <script>
-    // --- 1. SET YOUR GOOGLE SCRIPT URL HERE ---
+    // URL UPDATED HERE
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKY1r2RVdlG0DAOkHl108F0sbb80yslLhSaYhWLM982TCFvzyiqpGi3iouyzv28jMQ4A/exec"; 
 
     // --- Page Navigation ---
@@ -312,7 +312,7 @@
 
     // --- Save Data to Google Sheets ---
     async function saveToCloud() {
-        if (WEB_APP_URL === "https://script.google.com/macros/s/AKfycbxKY1r2RVdlG0DAOkHl108F0sbb80yslLhSaYhWLM982TCFvzyiqpGi3iouyzv28jMQ4A/exec") {
+        if (WEB_APP_URL === "YOUR_GOOGLE_SCRIPT_URL_HERE") {
             showStatus("Error: Please add your Google Script URL in the HTML code first!", "error");
             return;
         }
@@ -353,7 +353,9 @@
                     body: JSON.stringify({ sheetName: sheet.name, rows: rowData })
                 });
             }
-            showStatus("Backup Successful! All data saved to Google Sheets.", "success");
+            // Note: Because of 'no-cors', fetch doesn't return a readable success status,
+            // so we assume success if the loop completes without network errors.
+            showStatus("Backup Sent! Check your Google Sheet.", "success");
         } catch (error) {
             console.error(error);
             showStatus("Save Failed. Check console.", "error");
