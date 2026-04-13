@@ -3,617 +3,1299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excellent Institute - Financial Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Excellent Institute</title>
+    
+    <link rel="icon" type="image/jpeg" sizes="any" href="logo.jpeg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     
     <style>
-        :root {
-            /* Premium Native Dark Theme */
-            --bg-app: #09090b;
-            --bg-sidebar: #18181b;
-            --bg-card: #18181b;
-            
-            --text-main: #f4f4f5;
-            --text-secondary: #a1a1aa;
-            --text-tertiary: #71717a;
-            
-            --primary: #8b5cf6;
-            --primary-hover: #a78bfa;
-            
-            --success: #34d399;
-            --success-bg: rgba(52, 211, 153, 0.15);
-            --danger: #f87171;
-            --danger-bg: rgba(248, 113, 113, 0.15);
-            --info: #60a5fa;
-            --info-bg: rgba(96, 165, 250, 0.15);
-            
-            --border-light: #27272a;
-            --border-focus: #52525b;
-            
-            --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --radius-xl: 16px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-app); 
-            color: var(--text-main); 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; overflow: hidden; }
         
-        /* --- SIDEBAR --- */
-        .sidebar { 
-            width: 280px; background-color: var(--bg-sidebar); 
-            border-right: 1px solid var(--border-light); display: flex; flex-direction: column; z-index: 20;
-        }
-
-        .brand-container { padding: 32px 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .brand-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1); }
+        .premium-card { background: #ffffff; border-radius: 1.5rem; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05); border: 1px solid rgba(226, 232, 240, 0.6); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .premium-card:hover { box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.1); transform: translateY(-4px); }
         
-        .logo-icon {
-            background: linear-gradient(135deg, var(--primary), #d946ef);
-            color: white; width: 36px; height: 36px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 1.2rem; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
-        }
-
-        .brand-text h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em;}
-        .brand-text p { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;}
-
-        .nav-menu { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; padding: 16px; }
-        .nav-btn { 
-            background: transparent; border: none; color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; 
-            text-align: left; cursor: pointer; padding: 12px 16px; border-radius: var(--radius-md); 
-            transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; 
-        }
-        .nav-btn:hover { background-color: rgba(255,255,255,0.05); color: var(--text-main); }
-        .nav-btn.active { background-color: var(--info-bg); color: var(--info); font-weight: 600; border-left: 3px solid var(--info); }
+        .form-input { width: 100%; border-radius: 1rem; border: 2px solid #f1f5f9; padding: 0.875rem 1.25rem; font-size: 0.875rem; font-weight: 500; transition: all 0.3s ease; background-color: #f8fafc; color: #1e293b; }
+        .form-input:focus { border-color: #6366f1; background-color: white; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); outline: none; }
+        .form-label { display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
         
-        /* --- MAIN CONTENT AREA --- */
-        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; position: relative; overflow-y: auto; }
+        .nav-btn { width: 100%; display: flex; align-items: center; padding: 0.875rem 1.25rem; color: #94a3b8; border-radius: 1rem; transition: all 0.3s ease; cursor: pointer; font-weight: 600; margin-bottom: 0.5rem; text-decoration: none; }
+        .nav-btn:hover { background-color: rgba(255,255,255,0.05); color: white; transform: translateX(4px); }
+        .nav-btn.active { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4); }
         
-        #loading-overlay { 
-            position: absolute; inset: 0; background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(8px);
-            z-index: 50; display: flex; flex-direction: column; justify-content: center; align-items: center; 
-        }
-        .spinner { 
-            border: 3px solid rgba(139, 92, 246, 0.2); border-top: 3px solid var(--primary); 
-            border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #loading-overlay h3 { color: var(--text-main); margin-bottom: 8px;}
-
-        /* Header */
-        .top-header { 
-            background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(12px);
-            padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 10; 
-        }
-        .header-title { font-size: 1.25rem; font-weight: 600; color: var(--text-main); }
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
         
-        .btn-success { 
-            background-color: var(--success); color: #000; border: none; padding: 10px 20px; border-radius: var(--radius-md); 
-            font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; 
-        }
-        .btn-success:hover { box-shadow: 0 0 15px rgba(52, 211, 153, 0.4); transform: translateY(-1px); }
-
-        .btn-repair {
-            background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-md); 
-            font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px;
-        }
-        .btn-repair:hover { box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); transform: translateY(-1px); }
-
-        /* Page Content */
-        .content { padding: 40px; max-width: 1300px; margin: 0 auto; width: 100%; }
-        .page { display: none; animation: fadeIn 0.4s ease forwards; opacity: 0; }
-        .page.active { display: block; }
-        @keyframes fadeIn { to { opacity: 1; } }
-
-        /* --- DASHBOARD CARDS --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
-        .metric-card { 
-            background: var(--bg-card); padding: 24px; border-radius: var(--radius-xl); 
-            box-shadow: var(--shadow-card); border: 1px solid var(--border-light); display: flex; align-items: center; gap: 20px;
-        }
-        .metric-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .icon-blue { background-color: var(--info-bg); color: var(--info); }
-        .icon-green { background-color: var(--success-bg); color: var(--success); }
-        .icon-red { background-color: var(--danger-bg); color: var(--danger); }
-        .metric-info h3 { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-        .metric-info p { font-size: 2rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
-        .over-budget p { color: var(--danger); }
-
-        .info-card {
-            background: var(--bg-card); padding: 24px; border-radius: var(--radius-xl); border: 1px solid var(--border-light);
-            display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-card);
-        }
-        .info-card h4 { font-size: 1.1rem; margin-bottom: 8px;}
-        .info-card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; max-width: 600px;}
-
-        /* --- TABLES --- */
-        .section-header { margin-bottom: 20px; }
-        .section-header h2 { font-size: 1.25rem; font-weight: 600; }
-        .section-header p { font-size: 0.9rem; color: var(--text-tertiary); margin-top: 4px;}
-
-        .table-card { background: var(--bg-card); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); border: 1px solid var(--border-light); overflow: hidden; margin-bottom: 30px; }
-        .table-scroll { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { background-color: rgba(255,255,255,0.02); color: var(--text-secondary); padding: 16px 24px; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
-        td { padding: 16px 24px; border-bottom: 1px solid var(--border-light); font-size: 0.95rem; color: var(--text-main); vertical-align: middle; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: rgba(255,255,255,0.02); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        td[contenteditable="true"] { border: 1px solid transparent; border-radius: 4px; transition: all 0.2s; padding: 14px 22px; margin: 2px; }
-        td[contenteditable="true"]:hover { border-color: var(--border-focus); background-color: rgba(255,255,255,0.05); cursor: text; }
-        td[contenteditable="true"]:focus { border-color: var(--primary); background-color: #000; outline: none; box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3); }
+        .bg-animated { background: linear-gradient(-45deg, #4f46e5, #ec4899, #06b6d4, #10b981); background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        .summary-row { background-color: rgba(255,255,255,0.03) !important; }
-        .summary-row td { font-weight: 600; color: var(--text-main); border-top: 2px solid var(--border-focus);}
-        .text-right { text-align: right; padding-right: 30px !important; }
-        .balance-row td { background-color: var(--danger-bg) !important; color: var(--danger); font-weight: 700;}
-        
-        .table-footer { padding: 16px 24px; background-color: rgba(255,255,255,0.02); border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;}
-        
-        .btn-add { 
-            background-color: transparent; color: var(--text-main); border: 1px solid var(--border-focus);
-            padding: 8px 16px; border-radius: var(--radius-md); cursor: pointer; font-size: 0.875rem; font-weight: 500;
-            transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+        #comprehensive-print-view { display: none; }
+        @media print {
+            body { background: white !important; overflow: visible !important; height: auto !important; }
+            #login-screen, #app-screen, #edit-student-modal, #delete-student-modal, #edit-transaction-modal, #crop-modal { display: none !important; }
+            #comprehensive-print-view { display: block !important; width: 100%; color: black !important; padding: 10px; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page { margin: 1.5cm; }
         }
-        .btn-add:hover { border-color: var(--primary); color: var(--primary); background-color: rgba(139, 92, 246, 0.1); }
-        
-        .btn-delete { background: var(--danger-bg); color: var(--danger); border: none; cursor: pointer; width: 28px; height: 28px; border-radius: 6px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
-        tr:hover .btn-delete { opacity: 1; }
-        .btn-delete:hover { background: var(--danger); color: white; }
-
-        /* Toast Notifications */
-        #status-msg { 
-            position: fixed; bottom: 32px; right: 32px; padding: 16px 24px; border-radius: var(--radius-lg); 
-            color: white; font-weight: 500; display: flex; align-items: center; gap: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; 
-        }
-        #status-msg.show { transform: translateY(0); opacity: 1; }
-        .status-success { background-color: var(--success); color: #000; }
-        .status-error { background-color: var(--danger); }
-        .status-loading { background-color: var(--primary); }
     </style>
 </head>
-<body>
+<body class="text-slate-800 h-screen overflow-hidden flex selection:bg-indigo-200 relative">
 
-<aside class="sidebar">
-    <div class="brand-container">
-        <div class="brand-logo">
-            <div class="logo-icon">E</div>
-            <div class="brand-text">
-                <h1>Excellent Institute</h1>
-                <p>Live Database v4.1</p>
+    <div id="comprehensive-print-view" class="bg-white w-full"></div>
+
+    <div id="login-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-animated">
+        <div class="glass-panel relative z-10 w-full max-w-md p-8 md:p-12 rounded-[2.5rem] mx-4 transform transition-all shadow-[0_0_50px_rgba(0,0,0,0.3)] border border-white/40">
+            <div class="text-center mb-10">
+                <div class="w-32 h-32 mx-auto mb-6 bg-white p-1 rounded-full shadow-2xl shadow-indigo-500/30">
+                    <img src="logo.jpeg" onerror="this.src='https://ui-avatars.com/api/?name=Excellent+Institute&background=4f46e5&color=fff&size=128&bold=true&rounded=true'" alt="Institute Logo" class="w-full h-full object-cover rounded-full">
+                </div>
+                <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Excellent Institute</h1>
+                <p class="text-xs text-indigo-600 mt-2 font-bold uppercase tracking-widest bg-indigo-50 inline-block px-3 py-1 rounded-full border border-indigo-100">Secure Admin Portal</p>
             </div>
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-6">
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-600 transition-colors"><i class="fa-solid fa-user text-lg"></i></div>
+                    <input type="text" id="username" class="form-input pl-12 py-4 text-lg bg-white/70 backdrop-blur-sm" placeholder="Login ID" required>
+                </div>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-600 transition-colors"><i class="fa-solid fa-lock text-lg"></i></div>
+                    <input type="password" id="password" class="form-input pl-12 py-4 text-lg bg-white/70 backdrop-blur-sm" placeholder="Password" required>
+                </div>
+                <p id="login-error" class="text-rose-600 text-sm font-bold hidden text-center bg-rose-100 py-3 rounded-xl border border-rose-200 shadow-inner"><i class="fa-solid fa-circle-exclamation mr-2"></i>Access Denied! Incorrect Password.</p>
+                <button type="submit" id="login-btn" class="w-full py-4 mt-8 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-indigo-600 hover:to-purple-600 text-white font-bold text-lg rounded-2xl transition-all duration-300 shadow-xl hover:shadow-indigo-500/40 flex justify-center items-center transform hover:-translate-y-1">
+                    <span id="login-btn-text">Authenticate <i class="fa-solid fa-arrow-right-to-bracket ml-3"></i></span>
+                </button>
+            </form>
         </div>
     </div>
-    <nav class="nav-menu">
-        <button class="nav-btn active" onclick="showPage('dashboard-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Dashboard
-        </button>
-        <button class="nav-btn" onclick="showPage('hardware-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Hardware
-        </button>
-        <button class="nav-btn" onclick="showPage('furniture-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Interior & Setup
-        </button>
-        <button class="nav-btn" onclick="showPage('promo-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Promo Materials
-        </button>
-        <button class="nav-btn" onclick="showPage('supplies-page', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Stationery
-        </button>
-    </nav>
-</aside>
 
-<main class="main-wrapper">
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <h3>Syncing Database...</h3>
-        <p style="color: var(--text-secondary);">Connecting to your Google Sheet</p>
-    </div>
+    <div id="app-screen" class="hidden w-full h-full flex relative overflow-hidden bg-slate-50">
+        
+        <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/60 z-40 hidden md:hidden backdrop-blur-sm transition-opacity duration-300 opacity-0" onclick="toggleSidebar()"></div>
 
-    <header class="top-header">
-        <h2 class="header-title" id="current-page-title">Dashboard Overview</h2>
-        <div class="header-actions">
-            <button class="btn-success" onclick="saveToCloud()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Sync to Server
-            </button>
-        </div>
-    </header>
-
-    <div class="content">
-        <div id="dashboard-page" class="page active" data-title="Dashboard Overview">
-            <div class="dashboard-grid">
-                <div class="metric-card">
-                    <div class="metric-icon icon-blue">💰</div>
-                    <div class="metric-info">
-                        <h3>Total Investment</h3>
-                        <p id="dash-investment">₹260,000</p>
-                    </div>
+        <aside id="sidebar" class="w-[280px] bg-slate-900 text-slate-300 flex flex-col z-50 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-500 ease-out h-full shadow-[20px_0_50px_rgba(0,0,0,0.1)] border-r border-slate-800">
+            <div class="h-24 flex items-center px-6 bg-slate-950/50 relative overflow-hidden border-b border-slate-800 shrink-0">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl"></div>
+                <div class="w-12 h-12 bg-white rounded-full p-0.5 shadow-lg shadow-indigo-500/50 relative z-10 shrink-0 mr-3">
+                    <img src="logo.jpeg" onerror="this.src='https://ui-avatars.com/api/?name=Excellent+Institute&background=4f46e5&color=fff&size=64&bold=true&rounded=true'" alt="Institute Logo" class="w-full h-full object-cover rounded-full bg-transparent">
                 </div>
-                <div class="metric-card">
-                    <div class="metric-icon icon-green">📈</div>
-                    <div class="metric-info">
-                        <h3>Total Spent (All Bills)</h3>
-                        <p id="dash-spent">₹0</p>
-                    </div>
+                <div class="relative z-10">
+                    <h1 class="text-lg font-bold text-white tracking-wide leading-tight">Excellent Inst.</h1>
+                    <p class="text-[10px] text-indigo-400 font-bold tracking-widest uppercase">ERP Software</p>
                 </div>
-                <div class="metric-card" id="balance-card">
-                    <div class="metric-icon icon-red">⚖️</div>
-                    <div class="metric-info">
-                        <h3>Net Balance</h3>
-                        <p id="dash-balance">₹0</p>
-                    </div>
-                </div>
+                <button type="button" onclick="toggleSidebar()" class="md:hidden absolute right-4 text-slate-400 hover:text-white bg-slate-800 w-8 h-8 rounded-lg flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="info-card">
+            <nav class="flex-1 px-4 py-8 overflow-y-auto custom-scrollbar">
+                <div class="mb-6"><p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Main Menu</p><div onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active"><i class="fa-solid fa-layer-group w-8 text-lg"></i> <span>Dashboard</span></div></div>
+                <div class="mb-6"><p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Academics</p><div onclick="switchTab('registration')" id="nav-registration" class="nav-btn"><i class="fa-solid fa-user-plus w-8 text-lg"></i> <span>New Admission</span></div><div onclick="switchTab('tuition')" id="nav-tuition" class="nav-btn"><i class="fa-solid fa-graduation-cap w-8 text-lg"></i> <span>Student Database</span></div></div>
+                <div class="mb-6"><p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Services & Forms</p><div onclick="switchTab('job')" id="nav-job" class="nav-btn"><i class="fa-solid fa-briefcase w-8 text-lg"></i> <span>Job Applications</span></div><div onclick="switchTab('print')" id="nav-print" class="nav-btn"><i class="fa-solid fa-print w-8 text-lg"></i> <span>Print & Xerox Desk</span></div>
+                <a href="Admission_form.pdf" target="_blank" class="nav-btn mt-2 bg-slate-800/50 hover:bg-slate-800"><i class="fa-solid fa-file-pdf w-8 text-lg text-rose-400"></i> <span class="text-sm">Admission PDF</span></a>
+                <a href="Terms&conditions.pdf" target="_blank" class="nav-btn bg-slate-800/50 hover:bg-slate-800"><i class="fa-solid fa-file-contract w-8 text-lg text-emerald-400"></i> <span class="text-sm">Terms PDF</span></a></div>
+                <div class="mb-2"><p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Finance</p><div onclick="switchTab('expenditure')" id="nav-expenditure" class="nav-btn"><i class="fa-solid fa-wallet w-8 text-lg"></i> <span>Expenditures</span></div></div>
+            </nav>
+            
+            <div class="p-5 bg-slate-950 border-t border-slate-800 shrink-0">
+                <div class="flex items-center bg-slate-800 p-3 rounded-xl border border-slate-700 shadow-inner">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white font-bold shadow-md mr-3 relative">AD<div class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-800"></div></div>
+                    <div class="flex-1">
+                        <p class="text-xs font-bold text-white leading-tight">Admin User</p>
+                        <p id="sync-status" class="text-[9px] text-emerald-400 font-bold tracking-wider uppercase mt-0.5 transition-colors"><i class="fa-solid fa-cloud-check mr-1"></i>Cloud Synced</p>
+                    </div>
+                    <button type="button" onclick="logout()" class="w-8 h-8 rounded-lg text-rose-400 hover:bg-rose-500 hover:text-white flex items-center justify-center transition-colors"><i class="fa-solid fa-power-off text-sm"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col relative h-screen w-full bg-slate-100/50">
+            <header class="h-24 px-4 md:px-8 flex items-center justify-between shrink-0 z-10 relative">
+                <div class="absolute top-0 left-0 w-full h-full bg-white/70 backdrop-blur-xl border-b border-slate-200/60 z-0"></div>
+                <div class="flex items-center relative z-10">
+                    <button type="button" onclick="toggleSidebar()" class="mr-4 text-slate-700 hover:text-indigo-600 md:hidden bg-white w-10 h-10 rounded-xl shadow-sm border border-slate-200 flex items-center justify-center transition-transform active:scale-95"><i class="fa-solid fa-bars text-lg"></i></button>
+                    <div><h2 id="page-title" class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">System Dashboard</h2><p class="text-xs text-slate-500 mt-1 font-bold uppercase tracking-widest hidden sm:block text-indigo-600">Financial Overview</p></div>
+                </div>
+                <div class="relative z-10 flex items-center gap-3">
+                    <div class="bg-white px-5 py-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg shadow-inner"><i class="fa-solid fa-vault"></i></div>
+                        <div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden md:block leading-tight">Net Balance</span><span id="header-balance" class="text-lg md:text-xl font-black text-slate-800 leading-tight">₹0</span></div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10 pb-24 w-full scroll-smooth relative z-0 custom-scrollbar">
+                
+                <div id="view-dashboard" class="view-section active space-y-8 max-w-7xl mx-auto">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                        <div class="flex items-center gap-3 text-slate-600 text-sm font-bold w-full sm:w-auto"><i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i> Database Active & Synced</div>
+                        <button type="button" onclick="generateComprehensivePrint()" class="w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-slate-900/20 transition-all flex items-center justify-center transform hover:-translate-y-1"><i class="fa-solid fa-print mr-2 text-lg"></i> Print Full Financial Report</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="premium-card p-8 relative overflow-hidden group">
+                            <div class="absolute -right-8 -top-8 w-40 h-40 bg-emerald-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700"></div>
+                            <div class="relative z-10">
+                                <div class="flex items-center justify-between mb-6"><div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-arrow-trend-up"></i></div><span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest rounded-lg border border-emerald-100">Total In</span></div>
+                                <h3 class="text-sm font-bold text-slate-500 mb-1">Total Revenue</h3><h2 class="text-4xl md:text-5xl font-black text-slate-800 tracking-tight mb-2" id="dash-income">₹0</h2><p class="text-xs text-slate-400 font-medium">+ Tuitions, Exams, Jobs & Print</p>
+                            </div>
+                        </div>
+                        <div class="premium-card p-8 relative overflow-hidden group">
+                            <div class="absolute -right-8 -top-8 w-40 h-40 bg-rose-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700"></div>
+                            <div class="relative z-10">
+                                <div class="flex items-center justify-between mb-6"><div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-arrow-trend-down"></i></div><span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-bold uppercase tracking-widest rounded-lg border border-rose-100">Total Out</span></div>
+                                <h3 class="text-sm font-bold text-slate-500 mb-1">Total Expenditures</h3><h2 class="text-4xl md:text-5xl font-black text-slate-800 tracking-tight mb-2" id="dash-expense">₹0</h2><p class="text-xs text-slate-400 font-medium">- Bills, Salaries & Purchases</p>
+                            </div>
+                        </div>
+                        <div class="premium-card p-8 bg-gradient-to-br from-slate-900 to-slate-800 border-none relative overflow-hidden group shadow-xl">
+                            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                            <div class="absolute -right-8 -top-8 w-40 h-40 bg-indigo-500/30 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                            <div class="relative z-10">
+                                <div class="flex items-center justify-between mb-6"><div class="w-12 h-12 bg-white/10 text-white backdrop-blur-md rounded-2xl flex items-center justify-center text-xl shadow-inner border border-white/10"><i class="fa-solid fa-scale-balanced"></i></div><span class="px-3 py-1 bg-indigo-500/30 text-indigo-200 text-[10px] font-bold uppercase tracking-widest rounded-lg border border-indigo-400/30">Net Cash</span></div>
+                                <h3 class="text-sm font-bold text-indigo-200 mb-1">Available Balance</h3><h2 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-2" id="dash-balance">₹0</h2><p class="text-xs text-indigo-300 font-medium">Income minus Expenses</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 premium-card p-6 md:p-8 flex flex-col h-[500px]">
+                            <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4 shrink-0"><h3 class="text-xl font-extrabold text-slate-800 flex items-center"><i class="fa-solid fa-list-ul mr-3 text-indigo-500"></i> Recent Activity</h3></div>
+                            <div class="overflow-auto w-full custom-scrollbar flex-1">
+                                <table class="w-full text-left border-collapse min-w-[500px]">
+                                    <thead><tr class="text-slate-400 text-[10px] font-bold uppercase tracking-wider bg-slate-50 sticky top-0 z-10"><th class="py-3 px-4 rounded-l-lg">Date</th><th class="py-3 px-4">Description</th><th class="py-3 px-4 text-center">Type</th><th class="py-3 px-4 text-right">Amount</th><th class="py-3 px-2 rounded-r-lg"></th></tr></thead>
+                                    <tbody id="transaction-ledger" class="text-sm divide-y divide-slate-50 font-medium"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-1 premium-card p-6 md:p-8 bg-gradient-to-b from-indigo-50 to-white flex flex-col h-[500px]">
+                            <div class="flex items-center justify-between mb-6 border-b border-indigo-100 pb-4 shrink-0"><h3 class="text-xl font-extrabold text-indigo-900 flex items-center"><i class="fa-solid fa-hard-drive mr-3 text-indigo-500"></i> Data & Security</h3></div>
+                            <div class="flex-1 flex flex-col justify-center space-y-6">
+                                <div class="text-center mb-2">
+                                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-md border border-indigo-100 text-3xl text-indigo-400"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                                    <p class="text-sm text-slate-600 font-medium">Your data is synced securely to the cloud. You can also save a manual copy to your computer.</p>
+                                </div>
+                                <div class="space-y-3">
+                                    <button type="button" onclick="exportDatabaseBackup()" class="w-full py-4 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white font-bold rounded-2xl shadow-sm border border-emerald-200 transition-all flex flex-col items-center justify-center group cursor-pointer"><i class="fa-solid fa-download text-2xl mb-1 group-hover:scale-110 transition-transform"></i><span>Download Backup File (.json)</span></button>
+                                    <label class="w-full py-4 bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-bold rounded-2xl shadow-sm border border-blue-200 transition-all flex flex-col items-center justify-center group cursor-pointer"><i class="fa-solid fa-upload text-2xl mb-1 group-hover:scale-110 transition-transform"></i><span>Restore Data from File</span><input type="file" accept=".json" class="hidden" onchange="importDatabaseBackup(event)"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-registration" class="view-section max-w-5xl mx-auto">
+                    <form id="reg-form" onsubmit="submitRegistration(event)" class="premium-card overflow-hidden">
+                        <div class="bg-slate-900 p-8 md:p-10 text-white relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20"></div>
+                            <i class="fa-solid fa-id-card absolute -right-6 -bottom-6 text-9xl text-white/5 transform -rotate-12"></i>
+                            <h2 class="text-3xl font-black relative z-10 tracking-tight mb-2">New Student Admission</h2>
+                            <p class="text-indigo-200 text-sm relative z-10 font-medium">Create a new student profile and collect initial admission fees.</p>
+                        </div>
+                        <div class="p-6 md:p-10 space-y-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-[1.5rem] border border-slate-200">
+                                <div><label class="form-label text-indigo-600">Admission Date</label><input type="date" id="reg-date" class="form-input bg-white shadow-sm border-indigo-100" required></div>
+                                <div><label class="form-label text-indigo-600">Student Photo (Optional)</label><input type="file" id="reg-image" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-5 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer bg-white border border-indigo-100 rounded-xl shadow-sm transition-all" onchange="openCropModal(event, 'reg')"></div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div><label class="form-label">Full Name</label><input type="text" id="reg-name" class="form-input" placeholder="e.g. Rahul Sharma" required></div>
+                                <div><label class="form-label">Mobile Number</label><input type="tel" id="reg-phone" class="form-input" placeholder="+91"></div>
+                                <div><label class="form-label">Gender</label><select id="reg-gender" class="form-input cursor-pointer" required><option value="" disabled selected>Select Gender</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                                <div><label class="form-label">Course Enrolled</label><input type="text" id="reg-course" class="form-input" placeholder="e.g. PGDCA" required></div>
+                            </div>
+                            <hr class="border-slate-200">
+                            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-[1.5rem] p-6 md:p-8 border border-emerald-100 shadow-sm">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="text-emerald-800 font-black flex items-center text-lg"><i class="fa-solid fa-money-check-dollar mr-3 text-2xl text-emerald-500"></i> Financial Commitment</h3>
+                                    <div class="text-right bg-white px-4 py-2 rounded-xl shadow-sm border border-emerald-100">
+                                        <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Live Due Preview</p>
+                                        <p class="text-xl font-black text-rose-500" id="live-due-preview">₹0</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                                    <div><label class="form-label text-emerald-700">Fee Structure</label><select id="reg-feetype" class="form-input bg-white border-emerald-200 cursor-pointer" required><option value="Monthly">Monthly Payment</option><option value="One-Time">One-Time Payment</option></select></div>
+                                    <div><label class="form-label text-emerald-700">Total Course Fee (₹)</label><input type="number" id="reg-totalfee" class="form-input bg-white border-emerald-200 font-bold" placeholder="e.g. 15000" required></div>
+                                    <div><label class="form-label text-emerald-800">Admission Fee (Advance) ₹</label><input type="number" id="reg-paid" class="form-input border-emerald-400 focus:border-emerald-600 focus:ring-emerald-200 text-xl font-black text-emerald-700 bg-white shadow-inner" placeholder="0" required></div>
+                                    <div class="md:col-span-3 mt-4"><button type="submit" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg rounded-2xl shadow-lg shadow-emerald-500/40 transition-all cursor-pointer transform hover:-translate-y-1">Register Student & Generate Receipt <i class="fa-solid fa-file-invoice ml-2"></i></button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="view-tuition" class="view-section h-full max-w-7xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+                        
+                        <div class="lg:col-span-4 premium-card flex flex-col h-[500px] lg:h-[800px] overflow-hidden bg-white">
+                            <div class="p-6 border-b border-slate-100 bg-slate-50 z-10 relative shrink-0">
+                                <h3 class="font-extrabold text-slate-800 text-lg">Student Database</h3>
+                                <p class="text-xs text-slate-500 font-medium mt-1 mb-4">Select a student to view details</p>
+                                
+                                <div class="space-y-3">
+                                    <div class="relative"><i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i><input type="text" id="filter-search" oninput="renderStudentList()" placeholder="Search Name or ID..." class="w-full rounded-xl border border-slate-200 pl-9 py-2.5 text-sm font-medium focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 outline-none transition-all bg-white"></div>
+                                    <div class="flex gap-2">
+                                        <select id="filter-due" onchange="renderStudentList()" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-indigo-500 outline-none transition-all bg-white cursor-pointer font-bold text-slate-600"><option value="all">All Dues Status</option><option value="pending">Pending Dues</option><option value="cleared">Cleared Dues</option></select>
+                                        <select id="filter-course" onchange="renderStudentList()" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-indigo-500 outline-none transition-all bg-white cursor-pointer font-bold text-slate-600"><option value="all">All Batches</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 overflow-y-auto flex-1 space-y-3 custom-scrollbar bg-slate-50/30" id="student-list"></div>
+                        </div>
+
+                        <div class="lg:col-span-8 h-full flex flex-col space-y-6">
+                            
+                            <div class="premium-card p-8 flex-1 flex flex-col items-center justify-center text-center h-full" id="tuition-placeholder">
+                                <div class="w-32 h-32 bg-indigo-50 text-indigo-300 rounded-full flex items-center justify-center mb-6 text-6xl shadow-inner border border-indigo-100"><i class="fa-solid fa-user-graduate"></i></div>
+                                <h3 class="text-2xl font-extrabold text-slate-400 mb-2">Select a Student</h3>
+                                <p class="text-slate-400 font-medium">Their full financial history and profile will appear here.</p>
+                            </div>
+
+                            <div id="tuition-active" class="hidden h-full flex flex-col gap-6">
+                                
+                                <div class="premium-card overflow-hidden shrink-0 shadow-lg border-slate-200">
+                                    <div class="p-6 md:p-8 border-b border-slate-100 flex flex-col sm:flex-row sm:justify-between sm:items-center bg-slate-900 text-white gap-6 relative overflow-hidden">
+                                        <div class="absolute right-0 top-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
+                                        <div class="flex items-center space-x-5 relative z-10">
+                                            <div class="w-20 h-20 md:w-24 md:h-24 bg-slate-800 text-white rounded-2xl flex items-center justify-center text-3xl font-bold shrink-0 overflow-hidden border-2 border-slate-600 shadow-xl" id="active-student-avatar"></div>
+                                            <div class="text-left">
+                                                <div class="flex items-center gap-3 mb-1">
+                                                    <h2 class="text-2xl md:text-3xl font-black tracking-tight leading-none" id="active-student-name">Name</h2>
+                                                    <button type="button" onclick="openEditModal()" class="w-8 h-8 rounded-full bg-indigo-500/20 hover:bg-indigo-500 text-indigo-300 hover:text-white flex items-center justify-center transition-all" title="Edit Profile"><i class="fa-solid fa-pen text-xs"></i></button>
+                                                    <button type="button" onclick="openDeleteModal(null, true)" class="w-8 h-8 rounded-full bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white flex items-center justify-center transition-all" title="Delete Student Record"><i class="fa-solid fa-trash text-xs"></i></button>
+                                                </div>
+                                                <div class="flex items-center space-x-2 mt-2 opacity-80"><i class="fa-solid fa-book text-xs"></i><p class="text-sm font-medium" id="active-student-course">Course</p><span class="text-slate-500">•</span><p class="text-xs" id="active-student-gender">Gender</p></div>
+                                                <span class="inline-block px-3 py-1 mt-3 text-[10px] bg-white/10 text-white rounded-lg font-bold uppercase tracking-wider border border-white/10" id="active-student-feetype">Monthly</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-left sm:text-right bg-slate-800/80 backdrop-blur-md p-4 md:p-6 rounded-2xl border border-slate-700 w-full sm:w-auto relative z-10 shadow-inner">
+                                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pending Course Dues</p>
+                                            <p class="text-3xl md:text-4xl font-black text-rose-400 drop-shadow-md" id="active-student-dues">₹0</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-6 bg-slate-50 border-b border-slate-100 text-center divide-x divide-slate-200/60">
+                                        <div><p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Admission Date</p><p class="text-sm font-bold text-slate-700" id="active-student-date">-</p></div>
+                                        <div><p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Phone / Contact</p><p class="text-sm font-bold text-slate-700" id="active-student-phone">-</p></div>
+                                        <div><p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Total Course Fee</p><p class="text-sm font-bold text-indigo-600" id="active-student-totalfee">₹0</p></div>
+                                        <div><p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Total Paid (Advance + Tuitions)</p><p class="text-sm font-bold text-emerald-600" id="active-student-paidfee">₹0</p></div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 flex-1 overflow-hidden min-h-[350px]">
+                                    <div class="premium-card flex flex-col bg-white overflow-hidden shadow-md">
+                                        <div class="p-4 border-b border-slate-100 bg-slate-50 shrink-0"><h3 class="font-bold text-slate-700 text-sm"><i class="fa-solid fa-plus-circle mr-2 text-emerald-500"></i> Record New Payment</h3></div>
+                                        <form onsubmit="submitTuitionFee(event)" class="p-6 flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar">
+                                            <input type="hidden" id="tuition-student-id">
+                                            <div class="space-y-4 mb-4">
+                                                <div><label class="form-label">Payment Date</label><input type="date" id="tuition-date" class="form-input cursor-pointer" required></div>
+                                                <div>
+                                                    <label class="form-label text-indigo-600">Type of Fee</label>
+                                                    <select id="tuition-feetype-select" class="form-input cursor-pointer font-bold text-indigo-700 bg-indigo-50 border-indigo-200" required>
+                                                        <option value="Course Tuition Fee">📖 Course Tuition Fee (Reduces Dues)</option>
+                                                        <option value="Admission Fee">🎟️ Admission Fee (Late Advance - Reduces Dues)</option>
+                                                        <option value="Exam / Certificate Fee">📝 Exam / Certificate Fee (Extra Charge)</option>
+                                                        <option value="Other Fee">💡 Other Fee (Extra Charge)</option>
+                                                    </select>
+                                                </div>
+                                                <div><label class="form-label">Description / Month (Optional)</label><input type="text" id="tuition-desc" class="form-input" placeholder="e.g. March / First Sem"></div>
+                                                <div><label class="form-label text-emerald-700">Amount Received (₹)</label><input type="number" id="tuition-amount" class="form-input text-xl font-black text-emerald-600 bg-emerald-50 border-emerald-200 shadow-inner" placeholder="0" required></div>
+                                            </div>
+                                            <button type="submit" class="w-full py-4 bg-slate-900 hover:bg-indigo-600 text-white font-bold rounded-2xl shadow-lg transition-all flex justify-center items-center text-sm cursor-pointer transform hover:-translate-y-1"><i class="fa-solid fa-receipt mr-2"></i> Save & Print</button>
+                                        </form>
+                                    </div>
+
+                                    <div class="premium-card flex flex-col bg-white overflow-hidden shadow-md">
+                                        <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center shrink-0"><h3 class="font-bold text-slate-700 text-sm"><i class="fa-solid fa-clock-rotate-left mr-2 text-indigo-500"></i> Payment History</h3></div>
+                                        <div class="overflow-y-auto flex-1 custom-scrollbar p-2">
+                                            <table class="w-full text-left border-collapse min-w-[300px]">
+                                                <thead><tr class="text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-100"><th class="py-2 px-3">Date</th><th class="py-2 px-3">Description</th><th class="py-2 px-3 text-right">Amount</th><th class="py-2 px-2 text-center"></th></tr></thead>
+                                                <tbody id="student-mini-ledger" class="text-xs divide-y divide-slate-50 font-medium"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-job" class="view-section max-w-6xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+                        <div class="lg:col-span-5">
+                            <form onsubmit="submitJobApp(event)" class="premium-card p-8 bg-gradient-to-br from-blue-50 to-white border border-blue-100 sticky top-0">
+                                <h3 class="text-xl font-black text-blue-900 mb-6 flex items-center"><div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center mr-4 shadow-lg shadow-blue-500/30"><i class="fa-solid fa-briefcase text-xl"></i></div>New Job Application</h3>
+                                <div class="space-y-5">
+                                    <div><label class="form-label text-blue-800">Date Received</label><input type="date" id="job-date" class="form-input bg-white" required></div>
+                                    <div><label class="form-label text-blue-800">Applicant Name</label><input type="text" id="job-name" class="form-input bg-white" placeholder="e.g. Amit Kumar" required></div>
+                                    <div><label class="form-label text-blue-800">Applied Post / Exam</label><input type="text" id="job-post" class="form-input bg-white" placeholder="e.g. SSC CGL / Railway" required></div>
+                                    <div><label class="form-label text-blue-800">Amount Received (₹)</label><input type="number" id="job-amount" class="form-input text-xl text-blue-700 font-black bg-white border-blue-200 shadow-inner" placeholder="0" required></div>
+                                    <button type="submit" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/40 transition-all mt-4 cursor-pointer text-lg transform hover:-translate-y-1">Record Job Income</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="lg:col-span-7">
+                            <div class="premium-card p-8 h-[500px] lg:h-[700px] flex flex-col">
+                                <h3 class="text-xl font-extrabold text-slate-800 mb-6 border-b border-slate-100 pb-4 flex items-center"><i class="fa-solid fa-clock-rotate-left mr-3 text-slate-400"></i> Recent Applications</h3>
+                                <div class="overflow-y-auto flex-1 pr-2 space-y-4 custom-scrollbar" id="job-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-print" class="view-section max-w-6xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+                        <div class="lg:col-span-5">
+                            <form onsubmit="submitPrintIncome(event)" class="premium-card p-8 bg-gradient-to-br from-purple-50 to-white border border-purple-100 sticky top-0">
+                                <h3 class="text-xl font-black text-purple-900 mb-6 flex items-center"><div class="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center mr-4 shadow-lg shadow-purple-500/30"><i class="fa-solid fa-print text-xl"></i></div>Print & Copy Services</h3>
+                                <div class="space-y-5">
+                                    <div><label class="form-label text-purple-800">Date</label><input type="date" id="print-date" class="form-input bg-white" required></div>
+                                    <div><label class="form-label text-purple-800">Service Provided</label><select id="print-service" class="form-input bg-white cursor-pointer font-bold text-slate-700" required><option value="Photocopy (Xerox)">Photocopy (Xerox)</option><option value="Color Printout">Color Printout</option><option value="B/W Printout">B/W Printout</option><option value="Lamination">Lamination</option><option value="Spiral Binding">Spiral Binding</option><option value="Other Service">Other Service</option></select></div>
+                                    <div><label class="form-label text-purple-800">Customer / Desc (Optional)</label><input type="text" id="print-desc" class="form-input bg-white" placeholder="e.g. 100 pages project"></div>
+                                    <div><label class="form-label text-purple-800">Amount Received (₹)</label><input type="number" id="print-amount" class="form-input text-xl text-purple-700 font-black bg-white border-purple-200 shadow-inner" placeholder="0" required></div>
+                                    <button type="submit" class="w-full py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-lg shadow-purple-500/40 transition-all mt-4 cursor-pointer text-lg transform hover:-translate-y-1">Add to Revenue</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="lg:col-span-7">
+                            <div class="premium-card p-8 h-[500px] lg:h-[700px] flex flex-col">
+                                <h3 class="text-xl font-extrabold text-slate-800 mb-6 border-b border-slate-100 pb-4 flex items-center"><i class="fa-solid fa-clock-rotate-left mr-3 text-slate-400"></i> Recent Print Income</h3>
+                                <div class="overflow-y-auto flex-1 pr-2 space-y-4 custom-scrollbar" id="print-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-expenditure" class="view-section max-w-6xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+                        <div class="lg:col-span-5">
+                            <form onsubmit="submitExpense(event)" class="premium-card p-8 bg-gradient-to-br from-rose-50 to-white border border-rose-100 sticky top-0">
+                                <h3 class="text-xl font-black text-rose-900 mb-6 flex items-center"><div class="w-12 h-12 rounded-2xl bg-rose-600 text-white flex items-center justify-center mr-4 shadow-lg shadow-rose-500/30"><i class="fa-solid fa-minus text-xl"></i></div>Record Expense</h3>
+                                <div class="space-y-5">
+                                    <div><label class="form-label text-rose-800">Payment Date</label><input type="date" id="exp-date" class="form-input bg-white" required></div>
+                                    <div>
+                                        <label class="form-label text-rose-800">Category</label>
+                                        <select id="exp-category" class="form-input bg-white cursor-pointer font-bold text-slate-700" required>
+                                            <option value="Electricity Bill">Electricity Bill</option>
+                                            <option value="Office Rent">Office Rent</option>
+                                            <option value="Staff Salary">Staff Salary</option>
+                                            <option value="Maintenance & Repair">Maintenance & Repair</option>
+                                            <option value="Paper & Ink Supplies">Paper & Ink Supplies</option>
+                                            <option value="Institute Promotion">Institute Promotion</option>
+                                            <option value="Water Can">Water Can</option>
+                                            <option value="Miscellaneous">Miscellaneous</option>
+                                        </select>
+                                    </div>
+                                    <div><label class="form-label text-rose-800">Amount (₹)</label><input type="number" id="exp-amount" class="form-input text-xl text-rose-600 font-black bg-white border-rose-200 shadow-inner" placeholder="0" required></div>
+                                    <div><label class="form-label text-rose-800">Description (Optional)</label><input type="text" id="exp-desc" class="form-input bg-white" placeholder="e.g. March Electricity"></div>
+                                    <button type="submit" class="w-full py-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-500/40 transition-all mt-4 cursor-pointer text-lg transform hover:-translate-y-1">Deduct from Balance</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="lg:col-span-7">
+                            <div class="premium-card p-8 h-[500px] lg:h-[700px] flex flex-col">
+                                <h3 class="text-xl font-extrabold text-slate-800 mb-6 border-b border-slate-100 pb-4 flex items-center"><i class="fa-solid fa-clock-rotate-left mr-3 text-slate-400"></i> Expenditure History</h3>
+                                <div class="overflow-y-auto flex-1 pr-2 space-y-4 custom-scrollbar" id="expense-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="edit-student-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="premium-card w-full max-w-3xl mx-4 max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-300 shadow-2xl" id="edit-modal-content">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-[1.5rem]">
+                <h3 class="text-xl font-black text-slate-800 flex items-center"><i class="fa-solid fa-user-pen mr-3 text-indigo-600"></i> Edit Profile Details</h3>
+                <button type="button" onclick="closeEditModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-8 overflow-y-auto custom-scrollbar flex-1 bg-white">
+                <form id="edit-student-form" class="space-y-6">
+                    <input type="hidden" id="edit-student-id">
+                    
+                    <div class="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="form-label text-indigo-800">Total Course Fee (₹)</label><input type="number" id="edit-totalfee" class="form-input font-black text-indigo-700 bg-white border-indigo-200" required></div>
+                            <div>
+                                <label class="form-label text-emerald-800">Total Paid / Advance (₹)</label>
+                                <input type="number" id="edit-paidfee" class="form-input font-black text-emerald-700 bg-white border-emerald-200" required>
+                                <p class="text-[10px] text-slate-500 mt-2"><i class="fa-solid fa-circle-info"></i> Modifying this will auto-correct the Net Balance.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div><label class="form-label">Full Name</label><input type="text" id="edit-name" class="form-input" required></div>
+                        <div><label class="form-label">Admission Date</label><input type="date" id="edit-date" class="form-input" required></div>
+                        <div><label class="form-label">Mobile Number</label><input type="tel" id="edit-phone" class="form-input"></div>
+                        <div><label class="form-label">Gender</label><select id="edit-gender" class="form-input font-medium"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                        <div><label class="form-label">Course</label><input type="text" id="edit-course" class="form-input" required></div>
+                        <div><label class="form-label">Fee Structure</label><select id="edit-feetype" class="form-input font-medium"><option value="Monthly">Monthly</option><option value="One-Time">One-Time</option></select></div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Update Photo (Leave blank to keep current)</label>
+                            <input type="file" id="edit-image" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-100 file:text-indigo-700 cursor-pointer bg-slate-50 border border-slate-200 rounded-xl" onchange="openCropModal(event, 'edit')">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="p-6 border-t border-slate-100 bg-slate-50 rounded-b-[1.5rem] flex justify-end space-x-3">
+                <button type="button" onclick="closeEditModal()" class="px-6 py-3 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors">Cancel</button>
+                <button type="button" onclick="submitEditStudent(event)" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition-all transform hover:-translate-y-1">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-transaction-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="premium-card w-full max-w-lg mx-4 flex flex-col transform scale-95 transition-transform duration-300 shadow-2xl">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-[1.5rem]">
+                <h3 class="text-xl font-black text-slate-800 flex items-center"><i class="fa-solid fa-pen-to-square mr-3 text-indigo-600"></i> Edit Record</h3>
+                <button type="button" onclick="closeEditTransactionModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-8 bg-white">
+                <form id="edit-transaction-form" onsubmit="submitEditTransaction(event)" class="space-y-5">
+                    <input type="hidden" id="edit-tx-id">
+                    <div><label class="form-label">Date</label><input type="date" id="edit-tx-date" class="form-input" required></div>
+                    <div><label class="form-label">Title / Category</label><input type="text" id="edit-tx-title" class="form-input" required></div>
+                    <div><label class="form-label text-indigo-700">Amount (₹)</label><input type="number" id="edit-tx-amount" class="form-input font-bold text-indigo-700 bg-indigo-50 border-indigo-200" required></div>
+                    <div><label class="form-label">Description (Optional)</label><input type="text" id="edit-tx-desc" class="form-input"></div>
+                    <div class="pt-4 flex justify-end space-x-3">
+                        <button type="button" onclick="closeEditTransactionModal()" class="px-6 py-3 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors">Cancel</button>
+                        <button type="submit" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition-all transform hover:-translate-y-1">Update Record</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-student-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="premium-card w-full max-w-md mx-4 flex flex-col transform scale-95 transition-transform duration-300 border-2 border-rose-500/30" id="delete-modal-content">
+            <div class="p-6 border-b border-rose-100 bg-rose-50 rounded-t-[1.5rem]">
+                <h3 class="text-xl font-black text-rose-600 flex items-center"><i class="fa-solid fa-triangle-exclamation mr-3 text-2xl"></i> Delete Record</h3>
+            </div>
+            <div class="p-8 space-y-5 bg-white">
+                <p class="text-sm text-slate-600 font-medium leading-relaxed">This will permanently remove <span id="delete-student-name" class="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded"></span> and <strong class="text-rose-600">recalculate balances</strong>. This action cannot be undone.</p>
                 <div>
-                    <h4>Google Sheet Corrupted?</h4>
-                    <p>If your totals are missing or doubled, your Google Sheet lost data during an error. Click this button to wipe the broken sheet and forcefully write the correct numbers back to your server.</p>
+                    <label class="form-label text-rose-600">Enter Admin Delete Password</label>
+                    <input type="password" id="delete-password-input" class="form-input border-rose-200 focus:border-rose-500 bg-rose-50 text-lg tracking-widest" placeholder="••••••••" required>
+                    <p id="delete-error" class="text-rose-500 text-xs font-bold mt-2 hidden"><i class="fa-solid fa-circle-xmark mr-1"></i> Incorrect Password!</p>
                 </div>
-                <button class="btn-repair" onclick="forceRepairDatabase()">🛠️ Auto-Repair Database</button>
+                <input type="hidden" id="delete-transaction-id">
+                <input type="hidden" id="delete-student-flag">
             </div>
-        </div>
-
-        <div id="hardware-page" class="page" data-title="Hardware Ledger">
-            <div class="section-header"><div><h2>Computer & Lab Equipment</h2><p>Track all hardware purchases and installations.</p></div></div>
-            <div class="table-card">
-                <div class="table-scroll"><table id="table-hardware"><thead id="thead-hardware"></thead><tbody id="tbody-hardware"></tbody></table></div>
-                <div class="table-footer">
-                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Note: Totals are manual. Edit the TOTAL row directly if you change an item price.</span>
-                    <button class="btn-add" onclick="addNewRow('Hardware', 'tbody-hardware')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="furniture-page" class="page" data-title="Interior & Setup Ledger">
-            <div class="section-header"><div><h2>Furniture & Infrastructure</h2><p>Track desks, chairs, electrical, and structural expenses.</p></div></div>
-            <div class="table-card">
-                <div class="table-scroll"><table id="table-interior"><thead id="thead-interior"></thead><tbody id="tbody-interior"></tbody></table></div>
-                <div class="table-footer">
-                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Note: Totals are manual. Edit the TOTAL row directly if you change an item price.</span>
-                    <button class="btn-add" onclick="addNewRow('Interior', 'tbody-interior')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="promo-page" class="page" data-title="Marketing Ledger">
-            <div class="section-header"><div><h2>Promotional Materials</h2><p>Track banners, posters, and marketing expenses.</p></div></div>
-            <div class="table-card">
-                <div class="table-scroll"><table id="table-promo"><thead id="thead-promo"></thead><tbody id="tbody-promo"></tbody></table></div>
-                <div class="table-footer">
-                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Note: Totals are manual. Edit the TOTAL row directly if you change an item price.</span>
-                    <button class="btn-add" onclick="addNewRow('Promo', 'tbody-promo')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="supplies-page" class="page" data-title="Operations Ledger">
-            <div class="section-header"><div><h2>Stationery & Cleaning</h2><p>Track daily operational supplies and maintenance items.</p></div></div>
-            <div class="table-card">
-                <div class="table-scroll"><table id="table-stationery"><thead id="thead-stationery"></thead><tbody id="tbody-stationery"></tbody></table></div>
-                <div class="table-footer">
-                    <span style="color: var(--text-tertiary); font-size: 0.85rem;">Note: Totals are manual. Edit the TOTAL row directly if you change an item price.</span>
-                    <button class="btn-add" onclick="addNewRow('Stationery', 'tbody-stationery')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Row</button>
-                </div>
+            <div class="p-6 border-t border-slate-100 bg-slate-50 rounded-b-[1.5rem] flex justify-end space-x-3">
+                <button type="button" onclick="closeDeleteModal()" class="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors">Cancel</button>
+                <button type="button" id="confirm-delete-btn" onclick="executeDelete()" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-500/30 transition-all flex items-center transform hover:-translate-y-1">
+                    <span id="delete-btn-text">Confirm Delete</span>
+                </button>
             </div>
         </div>
     </div>
-</main>
 
-<div id="status-msg">
-    <span id="status-icon">⏳</span>
-    <span id="status-text">Connecting...</span>
-</div>
+    <div id="crop-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/90 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="premium-card w-full max-w-lg mx-4 flex flex-col transform scale-95 transition-transform duration-300 shadow-2xl overflow-hidden" id="crop-modal-content">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-black text-slate-800 flex items-center"><i class="fa-solid fa-crop mr-2 text-indigo-600"></i> Crop Image</h3>
+                <button type="button" onclick="closeCropModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 flex justify-center items-center bg-slate-100" style="height: 400px;">
+                <img id="image-to-crop" class="block max-w-full max-h-full hidden">
+            </div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end space-x-3">
+                <button type="button" onclick="closeCropModal()" class="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors">Cancel</button>
+                <button type="button" onclick="confirmCrop()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:-translate-y-1">Apply Crop</button>
+            </div>
+        </div>
+    </div>
 
-<script>
-    // --- SERVER CONNECTION ---
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKY1r2RVdlG0DAOkHl108F0sbb80yslLhSaYhWLM982TCFvzyiqpGi3iouyzv28jMQ4A/exec"; 
-    const TOTAL_INVESTMENT = 260000;
+    <script>
+        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec";
+        
+        let appData = { students: [], transactions: [], stats: { income: 0, expense: 0, balance: 0 } };
+        let sessionPassword = ""; 
+        let cropper = null;
+        let currentCropTarget = null;
+        let croppedImages = { reg: null, edit: null };
+        let saveTimeout = null;
 
-    // --- FULL FAILSAFE DATA WITH TOTALS INCLUDED ---
-    const INITIAL_DATA_FAILSAFE = {
-        "Hardware": [
-            ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
-            [1, "Motherboard", 10, 1600, 16000], [2, "CPU I5 3RD GEN", 10, 1670, 16700], [3, "CPU FAN", 10, 270, 2700],
-            [4, "RAM 4 GB", 10, 950, 9500], [5, "SSD 256GB", 10, 3830, 38300], [6, "CABINET", 10, 1700, 17000],
-            [7, "MONITOR", 10, 2000, 20000], [8, "Keyboard & Mouse", 10, 340, 3400], [9, "CANON G2010 PRINTER", 1, 10500, 10500],
-            [10, "Motherboard", 1, 3700, 3700], [11, "CPU I5 6TH GEN", 1, 3200, 3200], [12, "CPU FAN", 1, 270, 270],
-            [13, "RAM 8 GB", 1, 5200, 5200], [14, "SSD 256GB", 1, 3830, 3830], [15, "CABINET GAMING", 1, 1700, 1700],
-            [16, "MONITOR", 1, 2000, 2000], [17, "Keyboard & Mouse", 1, 340, 340], [18, "MOUSE PAD", 11, 40, 440],
-            [19, "LAN CABLE (25m)", 1, 750, 750], [20, "16 Port Switch", 1, "NA", "NA"],
-            ["TOTAL", "", "", "", 155530], ["ADVANCE", "", "", "", 10000], ["BALANCE", "", "", "", 145530]
-        ],
-        "Interior": [
-            ["SL. NO.", "ITEM", "QTY", "AMOUNT (₹)"],
-            [1, "Table", 3, 18375], [2, "Switch Board", 7, 675], [3, "Stool", 10, 2600],
-            [4, "Normal Chair", 3, 900], [5, "Height Adjustable Chair", 1, 3256], [6, "Extension Board", 1, 949],
-            [7, "Height Adjustable Laptop Desk", 1, 873], [8, "Electric Work (Fan, Light, Wiring, etc.) *Note: Adjustable with room rent", "NA", 25000],
-            [9, "Carpenter Charges", "NA", 17280], [10, "EVO-S 2300 UPS", 1, 10500], [11, "Battery 150 ah", 2, 23000],
-            [12, "Broadband Service", 1, 5000],
-            ["TOTAL", "", "", 108408]
-        ],
-        "Promo": [
-            ["SL. NO.", "ITEM", "QTY", "AMOUNT (₹)"],
-            [1, "Banner (4x9 size)", 1, "NA"], [2, "Banner (4x6 size)", 4, "NA"], [3, "Leaflet", 1000, "NA"],
-            [4, "Wall Poster", 500, "NA"], [5, "Standing Banner (4x2 size)", 1, 1500], [6, "Banner (2x3 size)", 2, "NA"],
-            ["TOTAL COST", "", "", 7000]
-        ],
-        "Stationery": [
-            ["SL. NO.", "ITEM", "QTY", "PRICE (₹)", "TOTAL (₹)"],
-            [1, "White Board", 1, 2735, 2735], [2, "Marker", 2, 50, 100], [3, "Duster", 1, 75, 75],
-            [4, "Mop", 1, 160, 160], [5, "Broom", 1, 60, 60], [6, "Register", 2, 110, 220],
-            [7, "GSM Paper Bundle", 1, 175, 175], [8, "Normal Paper Bundle", 1, "NA", "NA"], [9, "Dust Pan", 1, 50, 50],
-            [10, "Pen Packet", 1, 15, 15], [11, "Lock", 1, 120, 120], [12, "Extension Board", 1, 150, 150],
-            [13, "Water Dispenser", 1, 170, 170], [14, "Foot Scrubber Mat", 4, "NA", "NA"], [15, "Carpet", 2, "NA", "NA"],
-            [16, "Door Curtain", 4, "NA", "NA"], [17, "Floor Cleaning Finail", 1, 100, 100], [18, "Cleaning Acid", 1, 100, 100],
-            [19, "Dustbin", 1, "NA", "NA"],
-            ["TOTAL COST", "", "", "", 4230]
-        ]
-    };
+        window.onload = function() {
+            setDefaultDates();
+        };
 
-    document.addEventListener("DOMContentLoaded", () => { loadDataFromServer(); });
-
-    async function loadDataFromServer() {
-        let finalDataToUse = INITIAL_DATA_FAILSAFE;
-        let isSuccess = false;
-
-        try {
-            const response = await fetch(WEB_APP_URL);
-            const serverData = await response.json();
-            
-            // Check if server actually has valid rows
-            if (serverData && serverData['Hardware'] && serverData['Hardware'].length > 1) {
-                finalDataToUse = serverData;
-                isSuccess = true;
+        // --- UI HELPERS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const tFee = document.getElementById('reg-totalfee');
+            const pFee = document.getElementById('reg-paid');
+            if(tFee && pFee) {
+                tFee.addEventListener('input', calcLiveDue);
+                pFee.addEventListener('input', calcLiveDue);
             }
-        } catch (error) { console.error("Fetch failed.", error); }
+        });
 
-        renderAllTables(finalDataToUse);
-        calculateDashboardTotals(); 
-        
-        document.getElementById('loading-overlay').style.display = 'none';
-        if (isSuccess) {
-            showStatus("Database Connected", "success", "✅");
-        } else {
-            showStatus("Loaded Failsafe Data", "warning", "⚠️");
+        function calcLiveDue() {
+            let t = parseFloat(document.getElementById('reg-totalfee').value) || 0;
+            let p = parseFloat(document.getElementById('reg-paid').value) || 0;
+            document.getElementById('live-due-preview').innerText = `₹${t - p}`;
         }
-    }
 
-    // --- REPAIR TOOL ---
-    function forceRepairDatabase() {
-        if(confirm("This will overwrite your Google Sheet with the 100% accurate default data (Total: ₹275,168). Continue?")) {
-            renderAllTables(INITIAL_DATA_FAILSAFE);
-            calculateDashboardTotals();
-            saveToCloud(); 
-            showStatus("Repairing database...", "success", "🛠️");
+        function setDefaultDates() {
+            const today = new Date().toISOString().split('T')[0];
+            ['reg-date', 'tuition-date', 'job-date', 'print-date', 'exp-date'].forEach(id => {
+                if(document.getElementById(id)) document.getElementById(id).value = today;
+            });
         }
-    }
 
-    function renderAllTables(dataObj) {
-        buildTable('Hardware', dataObj['Hardware']);
-        buildTable('Interior', dataObj['Interior']);
-        buildTable('Promo', dataObj['Promo']);
-        buildTable('Stationery', dataObj['Stationery']);
-    }
+        function sendWhatsAppUpdate(message) {
+            const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
 
-    // --- RESTORED TABLE BUILDER (Keeps Manual Totals Editable) ---
-    function buildTable(sheetName, sheetData) {
-        let tbodyId = `tbody-${sheetName.toLowerCase()}`;
-        let theadId = `thead-${sheetName.toLowerCase()}`;
-        const tbody = document.getElementById(tbodyId);
-        const thead = document.getElementById(theadId);
-        if(!tbody || !thead) return;
-        
-        tbody.innerHTML = ''; thead.innerHTML = '';
-        if (!sheetData || sheetData.length === 0) return;
-
-        const headerRow = sheetData[0];
-        let theadHTML = "<tr>";
-        headerRow.forEach(text => { theadHTML += `<th>${text}</th>`; });
-        theadHTML += "<th></th></tr>";
-        thead.innerHTML = theadHTML;
-
-        let colspan = headerRow.length - 1;
-
-        for (let i = 1; i < sheetData.length; i++) {
-            const rowData = sheetData[i];
-            const tr = document.createElement('tr');
-            
-            const firstCellText = String(rowData[0]).toUpperCase();
-            if (firstCellText.includes("TOTAL") || firstCellText.includes("ADVANCE") || firstCellText.includes("BALANCE")) {
-                tr.className = firstCellText.includes("BALANCE") ? "summary-row balance-row" : "summary-row";
+        // --- CROPPER LOGIC ---
+        function openCropModal(event, target) {
+            const file = event.target.files[0];
+            if (!file) return;
+            currentCropTarget = target;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const image = document.getElementById('image-to-crop');
+                image.src = e.target.result;
+                image.classList.remove('hidden');
                 
-                // Editable Summary Rows
-                let cellHTML = `<td colspan="${colspan}" class="text-right">${rowData[0]}</td>`;
-                cellHTML += `<td contenteditable="true" oninput="calculateDashboardTotals()">${rowData[rowData.length - 1]}</td><td></td>`; 
-                tr.innerHTML = cellHTML;
-            } else {
-                let rowHTML = "";
-                rowData.forEach((cellData, index) => {
-                    const editable = index > 0 ? 'contenteditable="true"' : '';
-                    rowHTML += `<td ${editable}>${cellData}</td>`;
-                });
-                rowHTML += `<td><button class="btn-delete" onclick="deleteRow(this)" title="Delete Row">×</button></td>`;
-                tr.innerHTML = rowHTML;
-            }
-            tbody.appendChild(tr);
-        }
-    }
+                const modal = document.getElementById('crop-modal');
+                const content = document.getElementById('crop-modal-content');
+                modal.classList.remove('hidden');
+                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
 
-    // --- RESTORED DASHBOARD MATH (Extracts directly from the "TOTAL" cells on screen) ---
-    function calculateDashboardTotals() {
-        let grandTotal = 0;
-        const tables = ['table-hardware', 'table-interior', 'table-promo', 'table-stationery'];
-        
-        tables.forEach(tableId => {
-            const table = document.getElementById(tableId);
-            if(table) {
-                const rows = Array.from(table.querySelectorAll('tr.summary-row'));
-                const totalRow = rows.find(r => {
-                    let txt = String(r.cells[0].innerText).toUpperCase();
-                    return txt === 'TOTAL' || txt === 'TOTAL COST';
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 1,
                 });
-                
-                if (totalRow && totalRow.cells[1]) {
-                    let cleanStr = totalRow.cells[1].innerText.replace(/[^\d.-]/g, '');
-                    let val = parseFloat(cleanStr);
-                    if(!isNaN(val)) grandTotal += val;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeCropModal() {
+            const modal = document.getElementById('crop-modal');
+            const content = document.getElementById('crop-modal-content');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { 
+                modal.classList.add('hidden'); 
+                if(cropper) { cropper.destroy(); cropper = null; }
+                document.getElementById('image-to-crop').src = '';
+                if(!croppedImages[currentCropTarget]) {
+                    document.getElementById(currentCropTarget === 'reg' ? 'reg-image' : 'edit-image').value = '';
                 }
-            }
-        });
+            }, 300);
+        }
 
-        // Hardware Specific Math (Total - Advance = Balance)
-        const hwTable = document.getElementById('table-hardware');
-        if (hwTable) {
-            const summaryRows = Array.from(hwTable.querySelectorAll('tr.summary-row'));
-            const tRow = summaryRows.find(r => r.cells[0].innerText.toUpperCase() === 'TOTAL');
-            const aRow = summaryRows.find(r => r.cells[0].innerText.toUpperCase() === 'ADVANCE');
-            const bRow = summaryRows.find(r => r.cells[0].innerText.toUpperCase() === 'BALANCE');
+        function confirmCrop() {
+            if (!cropper) return;
+            const canvas = cropper.getCroppedCanvas({ width: 400, height: 400 });
+            croppedImages[currentCropTarget] = canvas.toDataURL('image/jpeg', 0.8);
+            closeCropModal();
+        }
+
+        // --- CORE SYSTEM ---
+        async function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('login-error');
+            const btnText = document.getElementById('login-btn-text');
+
+            if (user !== 'excellent') { showError(errorMsg); return; }
+
+            errorMsg.classList.add('hidden');
+            btnText.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Authenticating...';
             
-            if (tRow && aRow && bRow) {
-                let t = parseFloat(tRow.cells[1].innerText.replace(/[^\d.-]/g, '')) || 0;
-                let a = parseFloat(aRow.cells[1].innerText.replace(/[^\d.-]/g, '')) || 0;
-                bRow.cells[1].innerText = t - a;
-            }
-        }
-
-        // Update Dashboard GUI
-        document.getElementById('dash-spent').innerText = '₹' + grandTotal.toLocaleString();
-        let netBalance = TOTAL_INVESTMENT - grandTotal;
-        let balEl = document.getElementById('dash-balance');
-        balEl.innerText = (netBalance < 0 ? '-' : '') + '₹' + Math.abs(netBalance).toLocaleString();
-        
-        if (netBalance < 0) {
-            document.getElementById('balance-card').classList.add('over-budget');
-            document.querySelector('#balance-card .metric-icon').className = 'metric-icon icon-red';
-        } else {
-            document.getElementById('balance-card').classList.remove('over-budget');
-            document.querySelector('#balance-card .metric-icon').className = 'metric-icon icon-blue';
-        }
-    }
-
-    // --- UI Interactions ---
-    function addNewRow(sheetType, tbodyId) {
-        const tbody = document.getElementById(tbodyId);
-        const dataRows = Array.from(tbody.rows).filter(r => !r.classList.contains('summary-row'));
-        const rowCount = dataRows.length + 1;
-        
-        let rowHTML = `<td>${rowCount}</td><td contenteditable="true">New Item</td><td contenteditable="true">1</td>`;
-        if (sheetType === 'Hardware' || sheetType === 'Stationery') {
-            rowHTML += `<td contenteditable="true">0</td><td contenteditable="true">0</td>`;
-        } else {
-            rowHTML += `<td contenteditable="true">0</td>`;
-        }
-        rowHTML += `<td><button class="btn-delete" onclick="deleteRow(this)">×</button></td>`;
-        
-        const row = document.createElement('tr');
-        row.innerHTML = rowHTML;
-        
-        if(dataRows.length > 0) {
-             tbody.insertBefore(row, dataRows[dataRows.length - 1].nextSibling);
-        } else {
-             tbody.prepend(row); 
-        }
-        updateSlNumbers(tbody);
-    }
-
-    function deleteRow(btn) {
-        const tbody = btn.closest('tr').parentNode;
-        btn.closest('tr').remove();
-        updateSlNumbers(tbody);
-    }
-
-    function updateSlNumbers(tbody) {
-        Array.from(tbody.rows).filter(r => !r.classList.contains('summary-row')).forEach((row, index) => {
-            row.cells[0].innerText = index + 1;
-        });
-    }
-
-    function showPage(pageId, btnElement) {
-        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        document.getElementById('current-page-title').innerText = document.getElementById(pageId).getAttribute('data-title');
-        if (btnElement) btnElement.classList.add('active');
-    }
-
-    // --- RESTORED DATABASE SAVER (Safely saves summary rows) ---
-    async function saveToCloud() {
-        showStatus("Saving to Google...", "loading", "⏳");
-        const sheetsToSave = [
-            { id: 'table-hardware', name: 'Hardware' },
-            { id: 'table-interior', name: 'Interior' },
-            { id: 'table-promo', name: 'Promo' },
-            { id: 'table-stationery', name: 'Stationery' }
-        ];
-
-        try {
-            for (let sheet of sheetsToSave) {
-                const table = document.getElementById(sheet.id);
-                let rowData = [];
+            try {
+                const response = await fetch(GOOGLE_APP_URL + "?pass=" + encodeURIComponent(pass));
+                const data = await response.json();
                 
-                let ths = Array.from(table.querySelectorAll('thead th'));
-                let headers = ths.slice(0, -1).map(th => th.innerText);
-                rowData.push(headers);
+                if(data.error) throw new Error("Invalid Password");
 
-                let trs = table.querySelectorAll('tbody tr');
-                trs.forEach(tr => {
-                    let cells = [];
-                    // Extract colspans correctly so it writes perfectly to Google Sheets
-                    if (tr.classList.contains('summary-row')) {
-                        let td1 = tr.cells[0];
-                        let td2 = tr.cells[1]; 
-                        let colSpan = parseInt(td1.getAttribute('colspan') || 1);
-                        cells.push(td1.innerText);
-                        for(let i=1; i<colSpan; i++) cells.push("");
-                        cells.push(td2.innerText);
-                    } else {
-                        let tds = Array.from(tr.cells).slice(0, -1);
-                        tds.forEach(td => cells.push(td.innerText.replace(/\n/g, " ").trim()));
-                    }
-                    rowData.push(cells);
-                });
+                sessionPassword = pass;
+                appData = data;
+                
+                appData.transactions.forEach(tx => { if(!tx.id) tx.id = 'TXN' + Math.floor(Math.random() * 90000 + 10000); });
+                appData.students.forEach(st => { if(!st.id) st.id = 'STU' + Math.floor(Math.random() * 90000 + 10000); });
 
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ sheetName: sheet.name, rows: rowData })
-                });
+                localStorage.setItem('excellentERP_Database', JSON.stringify(appData));
+                
+                setDefaultDates();
+                refreshAllUI();
+                
+                document.getElementById('login-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('app-screen').classList.remove('hidden');
+                    document.getElementById('app-screen').classList.add('flex');
+                    document.getElementById('password').value = '';
+                    btnText.innerHTML = 'Secure Access <i class="fa-solid fa-arrow-right-to-bracket ml-3"></i>';
+                    document.getElementById('login-screen').style.opacity = '1';
+                }, 500);
+
+            } catch(err) {
+                showError(errorMsg);
+                btnText.innerHTML = 'Secure Access <i class="fa-solid fa-arrow-right-to-bracket ml-3"></i>';
             }
-            
-            showStatus("Saved Successfully!", "success", "✅");
-            
-        } catch (error) {
-            console.error(error);
-            showStatus("Connection failed.", "error", "❌");
         }
-    }
 
-    function showStatus(message, type, icon) {
-        const msgBox = document.getElementById('status-msg');
-        document.getElementById('status-text').innerText = message;
-        document.getElementById('status-icon').innerText = icon;
-        
-        msgBox.className = ''; 
-        msgBox.classList.add('status-' + type, 'show');
-        
-        if (type !== 'loading') { setTimeout(() => { msgBox.classList.remove('show'); }, 4000); }
-    }
-</script>
+        function showError(el) {
+            el.classList.remove('hidden');
+            document.getElementById('login-screen').animate([{ transform: 'translateX(0px)' }, { transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(0px)' }], { duration: 300 });
+        }
 
+        function logout() { location.reload(); }
+
+        function recalculateStats() {
+            appData.stats.income = 0;
+            appData.stats.expense = 0;
+            appData.transactions.forEach(tx => {
+                if(tx.type === 'income') appData.stats.income += parseFloat(tx.amount);
+                if(tx.type === 'expense') appData.stats.expense += parseFloat(tx.amount);
+            });
+            appData.stats.balance = appData.stats.income - appData.stats.expense;
+        }
+
+        function saveDatabase() {
+            localStorage.setItem('excellentERP_Database', JSON.stringify(appData));
+            
+            const syncEl = document.getElementById('sync-status');
+            if(syncEl) {
+                syncEl.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin mr-1"></i>Syncing...';
+                syncEl.className = 'text-[9px] text-amber-500 font-bold tracking-wider uppercase mt-0.5 transition-colors';
+            }
+
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                const payload = { password: sessionPassword, data: appData };
+                fetch(GOOGLE_APP_URL, { method: 'POST', body: JSON.stringify(payload), headers: { "Content-Type": "text/plain;charset=utf-8" }})
+                .then(res => res.json())
+                .then(data => {
+                    if(syncEl) {
+                        syncEl.innerHTML = '<i class="fa-solid fa-cloud-check mr-1"></i>Cloud Synced';
+                        syncEl.className = 'text-[9px] text-emerald-400 font-bold tracking-wider uppercase mt-0.5 transition-colors';
+                    }
+                })
+                .catch(error => {
+                    console.log("Cloud sync failed.", error);
+                    if(syncEl) {
+                        syncEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>Sync Failed';
+                        syncEl.className = 'text-[9px] text-rose-500 font-bold tracking-wider uppercase mt-0.5 transition-colors';
+                    }
+                });
+            }, 1500); 
+        }
+
+        function refreshAllUI() {
+            updateDashboard(); renderStudentList(); renderLedger(); renderExpenseList(); renderJobList(); renderPrintList();
+            
+            const activeId = document.getElementById('tuition-student-id').value;
+            if(activeId && !document.getElementById('tuition-active').classList.contains('hidden')) {
+                selectStudent(activeId);
+            }
+        }
+
+        function compressImage(file, callback) {
+            if(!file) return callback(null);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                    const MAX_SIZE = 200; let width = img.width, height = img.height;
+                    if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
+                    else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
+                    canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.8));
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (overlay.classList.contains('hidden')) { overlay.classList.remove('hidden'); setTimeout(() => overlay.classList.remove('opacity-0'), 10); } 
+            else { overlay.classList.add('opacity-0'); setTimeout(() => overlay.classList.add('hidden'), 300); }
+        }
+
+        function exportDatabaseBackup() {
+            const url = URL.createObjectURL(new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' }));
+            const link = document.createElement('a'); link.download = `Excellent_Institute_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.href = url; link.click();
+        }
+
+        function importDatabaseBackup(event) {
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (importedData.students && importedData.transactions && importedData.stats) {
+                        appData = importedData; saveDatabase(); alert("Database Restored Successfully!"); refreshAllUI();
+                    } else alert("Error: Invalid backup format.");
+                } catch (error) { alert("Error reading backup."); }
+            };
+            reader.readAsText(file);
+        }
+
+        function generateExcelBill(transactionDetails, billTitle) {
+            const now = new Date();
+            let wsData = [
+                ["EXCELLENT INSTITUTE"], ["TEACHERS COLONY, SURADA, DIST - GANJAM, ODISHA - 761108"], [""],
+                [`RECEIPT: ${billTitle}`], ["Printed Time:", now.toLocaleTimeString('en-IN')], ["--------------------------------------------------"],
+                ["DETAILS", "VALUE"]
+            ];
+            for (const [key, value] of Object.entries(transactionDetails)) wsData.push([key, value]);
+            wsData.push(["--------------------------------------------------"], ["System Generated Receipt. Verified by Admin."]);
+            const wb = XLSX.utils.book_new(), ws = XLSX.utils.aoa_to_sheet(wsData);
+            ws['!cols'] = [{ wch: 30 }, { wch: 35 }];
+            XLSX.utils.book_append_sheet(wb, ws, "Receipt");
+            XLSX.writeFile(wb, `${billTitle.replace(/\s+/g, '_')}_${now.getTime()}.xlsx`);
+        }
+
+        function generateComprehensivePrint() {
+            let printDiv = document.getElementById('comprehensive-print-view');
+            let now = new Date().toLocaleString('en-IN');
+            let html = `
+                <div style="text-align: center; margin-bottom: 20px; font-family: sans-serif;">
+                    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #1e293b;">EXCELLENT INSTITUTE</h1>
+                    <p style="margin: 0; font-size: 14px; color: #475569;">TEACHERS COLONY, SURADA, DIST - GANJAM, ODISHA - 761108</p>
+                    <h2 style="font-size: 20px; margin-top: 15px; border-bottom: 2px solid #1e293b; display: inline-block; padding-bottom: 5px;">Comprehensive Financial Statement</h2>
+                    <p style="font-size: 12px; text-align: right; margin-top: 10px; font-weight: bold;">Generated on: ${now}</p>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 30px; border: 2px solid #e2e8f0; padding: 15px; background: #f8fafc; border-radius: 10px; font-family: sans-serif;">
+                    <div><strong style="color: #64748b; text-transform: uppercase; font-size: 12px;">Total Revenue</strong><br><span style="font-size: 24px; font-weight: bold; color: #059669;">₹${appData.stats.income.toLocaleString('en-IN')}</span></div>
+                    <div><strong style="color: #64748b; text-transform: uppercase; font-size: 12px;">Total Expenditure</strong><br><span style="font-size: 24px; font-weight: bold; color: #e11d48;">₹${appData.stats.expense.toLocaleString('en-IN')}</span></div>
+                    <div><strong style="color: #64748b; text-transform: uppercase; font-size: 12px;">Net Balance</strong><br><span style="font-size: 24px; font-weight: bold; color: #4f46e5;">₹${appData.stats.balance.toLocaleString('en-IN')}</span></div>
+                </div>
+                <h3 style="font-size: 18px; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; font-family: sans-serif;">Complete Transaction Ledger</h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; font-family: sans-serif;">
+                    <thead><tr style="border-bottom: 2px solid #1e293b;"><th style="padding: 8px 5px;">Date</th><th style="padding: 8px 5px;">Description / Title</th><th style="padding: 8px 5px;">Type</th><th style="padding: 8px 5px; text-align: right;">Amount</th></tr></thead>
+                    <tbody>
+            `;
+            appData.transactions.forEach(tx => {
+                if (parseFloat(tx.amount) === 0) return;
+                let isInc = tx.type === 'income'; let sign = isInc ? '+' : '-';
+                html += `
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px 5px; color: #475569;">${tx.date}</td>
+                        <td style="padding: 8px 5px;"><strong>${tx.title}</strong> <br><small style="color:#64748b">${tx.description || ''}</small></td>
+                        <td style="padding: 8px 5px; font-weight: bold; color: ${isInc ? '#059669' : '#e11d48'}">${isInc ? 'INCOME' : 'EXPENSE'}</td>
+                        <td style="padding: 8px 5px; text-align: right; font-weight: bold;">${sign}₹${tx.amount.toLocaleString('en-IN')}</td>
+                    </tr>
+                `;
+            });
+            html += `</tbody></table><div style="margin-top: 40px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px dashed #e2e8f0; padding-top: 10px; font-family: sans-serif;">-- End of Official Statement --</div>`;
+            document.getElementById('comprehensive-print-view').innerHTML = html;
+            window.print();
+        }
+
+        // --- TRANSACTION EDIT LOGIC ---
+        function openEditTransactionModal(txId) {
+            const tx = appData.transactions.find(t => t.id === txId);
+            if(!tx) return;
+
+            if(tx.title.includes("Tuition Fee") || tx.title.includes("Admission") || tx.title.includes("Advance")) {
+                alert("To protect accounting integrity, please edit student payments directly from their profile in the Student Database.");
+                return;
+            }
+
+            document.getElementById('edit-tx-id').value = tx.id;
+            document.getElementById('edit-tx-date').value = tx.date;
+            document.getElementById('edit-tx-title').value = tx.title;
+            document.getElementById('edit-tx-amount').value = tx.amount;
+            document.getElementById('edit-tx-desc').value = tx.description || '';
+
+            const modal = document.getElementById('edit-transaction-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); modal.querySelector('div').classList.remove('scale-95'); }, 10);
+        }
+
+        function closeEditTransactionModal() {
+            const modal = document.getElementById('edit-transaction-modal');
+            modal.classList.add('opacity-0'); modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function submitEditTransaction(e) {
+            e.preventDefault();
+            const txId = document.getElementById('edit-tx-id').value;
+            const tx = appData.transactions.find(t => t.id === txId);
+            if(!tx) return;
+
+            tx.date = document.getElementById('edit-tx-date').value;
+            tx.title = document.getElementById('edit-tx-title').value;
+            tx.amount = parseFloat(document.getElementById('edit-tx-amount').value);
+            tx.description = document.getElementById('edit-tx-desc').value;
+
+            sendWhatsAppUpdate(`✏️ *RECORD EDITED*\n*Updated Transaction:* ${tx.title}\n*New Amount:* ₹${tx.amount}\n*Date:* ${tx.date}`);
+
+            recalculateStats(); saveDatabase(); refreshAllUI(); closeEditTransactionModal();
+            alert("Record updated successfully!");
+        }
+
+        // --- LOCAL DELETE LOGIC (INSTANT) ---
+        function deleteTransaction(txId) { openDeleteModal(txId, false); }
+
+        function openDeleteModal(id = null, isStudent = true) {
+            if(isStudent) {
+                const stId = document.getElementById('tuition-student-id').value;
+                const student = appData.students.find(s => s.id === stId);
+                if(!student) return;
+                document.getElementById('delete-student-name').innerText = student.name;
+                document.getElementById('delete-student-flag').value = 'true';
+            } else {
+                document.getElementById('delete-student-name').innerText = "this record";
+                document.getElementById('delete-transaction-id').value = id;
+                document.getElementById('delete-student-flag').value = 'false';
+            }
+
+            document.getElementById('delete-password-input').value = '';
+            document.getElementById('delete-error').classList.add('hidden');
+
+            const modal = document.getElementById('delete-student-modal'); const content = document.getElementById('delete-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('delete-student-modal'); const content = document.getElementById('delete-modal-content');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function executeDelete() {
+            const pass = document.getElementById('delete-password-input').value;
+            const errorMsg = document.getElementById('delete-error');
+            const btnText = document.getElementById('delete-btn-text');
+            const isStudent = document.getElementById('delete-student-flag').value === 'true';
+
+            if(!pass) return;
+
+            // Instant Local Verification
+            if (pass !== 'admin') {
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            errorMsg.classList.add('hidden');
+            btnText.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Deleting...';
+
+            setTimeout(() => {
+                if(isStudent) {
+                    const stId = document.getElementById('tuition-student-id').value;
+                    let student = appData.students.find(s => s.id === stId);
+                    if(student) {
+                        appData.students = appData.students.filter(s => s.id !== stId);
+                        appData.transactions = appData.transactions.filter(tx => !tx.title.includes(student.name));
+                        document.getElementById('tuition-placeholder').classList.remove('hidden');
+                        document.getElementById('tuition-active').classList.add('hidden');
+                        
+                        sendWhatsAppUpdate(`⚠️ *RECORD DELETED*\n*Student:* ${student.name} profile and all associated payments were permanently deleted.`);
+                        alert(`${student.name} has been completely deleted.`);
+                    }
+                } else {
+                    const txId = document.getElementById('delete-transaction-id').value;
+                    const txIndex = appData.transactions.findIndex(t => t.id === txId);
+                    if(txIndex !== -1) {
+                        const tx = appData.transactions[txIndex];
+                        if (tx.title.includes('Tuition') || tx.title.includes('Admission') || tx.title.includes('Advance')) {
+                            appData.students.forEach(student => {
+                                if (tx.title.includes(student.name)) {
+                                    student.paidFee -= tx.amount;
+                                    if(student.paidFee < 0) student.paidFee = 0;
+                                }
+                            });
+                        }
+                        const txTitle = tx.title;
+                        const txAmt = tx.amount;
+                        appData.transactions.splice(txIndex, 1);
+                        
+                        sendWhatsAppUpdate(`⚠️ *RECORD DELETED*\n*Transaction:* ${txTitle}\n*Amount:* ₹${txAmt} was permanently deleted.`);
+                        alert("Record deleted successfully.");
+                    }
+                }
+                
+                recalculateStats(); saveDatabase(); refreshAllUI(); closeDeleteModal();
+                btnText.innerHTML = 'Confirm Delete';
+            }, 300);
+        }
+
+        // --- SUBMISSION LOGIC ---
+        function addStudent(name, course, totalFee, paidNow, phone, dateStr, feeType, gender, imageBase64) {
+            const id = 'STU' + Math.floor(Math.random() * 90000 + 10000);
+            appData.students.unshift({ 
+                id: id, name: name, course: course, totalFee: parseFloat(totalFee), paidFee: parseFloat(paidNow),
+                feeType: feeType, gender: gender, phone: phone, date: dateStr, image: imageBase64 
+            });
+            recordTransaction("income", `Admission Fee - ${name}`, parseFloat(paidNow), dateStr);
+            renderStudentList(); saveDatabase(); return id;
+        }
+
+        function recordTransaction(type, title, amount, dateStr, desc = "") {
+            appData.transactions.unshift({ 
+                id: 'TXN' + Math.floor(Math.random() * 90000 + 10000),
+                type: type, title: title, amount: parseFloat(amount), date: dateStr, description: desc,
+                timestamp: new Date().getTime()
+            });
+            appData.transactions.sort((a,b) => {
+                let d = new Date(b.date) - new Date(a.date);
+                if(d === 0) return (b.timestamp || 0) - (a.timestamp || 0);
+                return d;
+            });
+            recalculateStats(); refreshAllUI(); saveDatabase();
+        }
+
+        function submitRegistration(e) {
+            e.preventDefault();
+            const date = document.getElementById('reg-date').value; const name = document.getElementById('reg-name').value;
+            const course = document.getElementById('reg-course').value; const feeType = document.getElementById('reg-feetype').value;
+            const gender = document.getElementById('reg-gender').value; const phone = document.getElementById('reg-phone').value;
+            const totalFee = document.getElementById('reg-totalfee').value; const paid = document.getElementById('reg-paid').value;
+            const fileInput = document.getElementById('reg-image');
+
+            const finishReg = function(base64Image) {
+                const stId = addStudent(name, course, totalFee, paid, phone, date, feeType, gender, base64Image);
+                generateExcelBill({
+                    "Receipt Date": date, "Student ID": stId, "Student Name": name, "Gender": gender, "Fee Structure": feeType,
+                    "Course Name": course, "Total Course Fee": `₹ ${totalFee}`, "Advance Paid": `₹ ${paid}`, 
+                    "Pending Due": `₹ ${parseFloat(totalFee) - parseFloat(paid)}`
+                }, "NEW_ADMISSION");
+                
+                sendWhatsAppUpdate(`🟢 *NEW ADMISSION*\n*Name:* ${name}\n*Course:* ${course}\n*Total Fee:* ₹${totalFee}\n*Advance Paid:* ₹${paid}\n*Due:* ₹${parseFloat(totalFee) - parseFloat(paid)}\n*Date:* ${date}`);
+                
+                alert(`Success! ${name} registered.`); e.target.reset(); setDefaultDates(); switchTab('tuition'); 
+                croppedImages.reg = null;
+            };
+
+            if(croppedImages.reg) {
+                finishReg(croppedImages.reg);
+            } else {
+                compressImage(fileInput.files[0], finishReg);
+            }
+        }
+
+        function openEditModal() {
+            const stId = document.getElementById('tuition-student-id').value;
+            const student = appData.students.find(s => s.id === stId);
+            if(!student) return;
+
+            document.getElementById('edit-student-id').value = student.id; document.getElementById('edit-name').value = student.name;
+            document.getElementById('edit-date').value = student.date || new Date().toISOString().split('T')[0];
+            document.getElementById('edit-phone').value = student.phone || ''; document.getElementById('edit-gender').value = student.gender || 'Male';
+            document.getElementById('edit-course').value = student.course; document.getElementById('edit-feetype').value = student.feeType || 'Monthly';
+            document.getElementById('edit-totalfee').value = student.totalFee;
+            document.getElementById('edit-paidfee').value = student.paidFee;
+
+            const modal = document.getElementById('edit-student-modal'); const content = document.getElementById('edit-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('edit-student-modal'); const content = document.getElementById('edit-modal-content');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { 
+                modal.classList.add('hidden'); 
+                document.getElementById('edit-image').value = '';
+                croppedImages.edit = null;
+            }, 300);
+        }
+
+        function submitEditStudent(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-student-id').value; let student = appData.students.find(s => s.id === id);
+            if(!student) return;
+
+            student.name = document.getElementById('edit-name').value; student.date = document.getElementById('edit-date').value;
+            student.phone = document.getElementById('edit-phone').value; student.gender = document.getElementById('edit-gender').value;
+            student.course = document.getElementById('edit-course').value; student.feeType = document.getElementById('edit-feetype').value;
+            student.totalFee = parseFloat(document.getElementById('edit-totalfee').value);
+            
+            const oldPaid = student.paidFee;
+            const newPaid = parseFloat(document.getElementById('edit-paidfee').value);
+            student.paidFee = newPaid;
+
+            if(newPaid !== oldPaid) {
+                const diff = newPaid - oldPaid;
+                const today = new Date().toISOString().split('T')[0];
+                if(diff > 0) {
+                    recordTransaction("income", `Advance Adjustment - ${student.name}`, diff, today, "Corrected via Edit");
+                    sendWhatsAppUpdate(`✏️ *PROFILE EDITED*\n*Student:* ${student.name}\n*Correction:* Advance payment increased by ₹${diff}.\n*New Total Paid:* ₹${newPaid}`);
+                } else {
+                    recordTransaction("expense", `Advance Adjustment (Refund) - ${student.name}`, Math.abs(diff), today, "Corrected via Edit");
+                    sendWhatsAppUpdate(`✏️ *PROFILE EDITED*\n*Student:* ${student.name}\n*Correction:* Advance payment reduced by ₹${Math.abs(diff)}.\n*New Total Paid:* ₹${newPaid}`);
+                }
+            } else {
+                sendWhatsAppUpdate(`✏️ *PROFILE EDITED*\n*Student:* ${student.name} profile details were updated.`);
+            }
+
+            const fileInput = document.getElementById('edit-image');
+            if(croppedImages.edit) {
+                student.image = croppedImages.edit;
+                croppedImages.edit = null;
+                finalizeEdit(student);
+            } else if(fileInput.files && fileInput.files[0]) {
+                compressImage(fileInput.files[0], function(base64Image) { student.image = base64Image; finalizeEdit(student); });
+            } else { finalizeEdit(student); }
+        }
+
+        function finalizeEdit(student) {
+            closeEditModal(); saveDatabase(); renderStudentList(); selectStudent(student.id); alert("Profile updated successfully!");
+        }
+
+        function submitTuitionFee(e) {
+            e.preventDefault();
+            const stId = document.getElementById('tuition-student-id').value; const date = document.getElementById('tuition-date').value;
+            const feeCategory = document.getElementById('tuition-feetype-select').value; const desc = document.getElementById('tuition-desc').value;
+            const amount = parseFloat(document.getElementById('tuition-amount').value);
+
+            let student = appData.students.find(s => s.id === stId);
+            if(student) {
+                if(feeCategory === "Course Tuition Fee" || feeCategory === "Admission Fee") { student.paidFee += amount; }
+                
+                const finalDesc = desc ? `${feeCategory} (${desc})` : feeCategory;
+                recordTransaction("income", `${finalDesc} - ${student.name}`, amount, date);
+                
+                generateExcelBill({
+                    "Receipt Date": date, "Student ID": student.id, "Student Name": student.name, "Course Name": student.course, 
+                    "Fee Type Paid": feeCategory, "Description": desc || "N/A", "Amount Paid": `₹ ${amount}`,
+                    "Remaining Course Due": `₹ ${student.totalFee - student.paidFee}`
+                }, feeCategory.toUpperCase().replace(/\s+/g, '_'));
+
+                sendWhatsAppUpdate(`🟢 *FEE RECEIVED*\n*Student:* ${student.name}\n*Course:* ${student.course}\n*Type:* ${feeCategory}\n*Amount Paid:* ₹${amount}\n*Remaining Due:* ₹${student.totalFee - student.paidFee}\n*Date:* ${date}`);
+
+                alert(`₹${amount} recorded for ${student.name}!`); e.target.reset(); setDefaultDates(); selectStudent(stId); 
+            }
+        }
+
+        function submitJobApp(e) {
+            e.preventDefault();
+            const date = document.getElementById('job-date').value; const name = document.getElementById('job-name').value;
+            const post = document.getElementById('job-post').value; const amount = document.getElementById('job-amount').value;
+            recordTransaction("income", `Job Desk: ${name}`, amount, date, post);
+            generateExcelBill({"Date": date, "Applicant Name": name, "Applied For": post, "Amount Received": `₹ ${amount}`}, "JOB_APPLICATION");
+            
+            sendWhatsAppUpdate(`🟢 *JOB DESK INCOME*\n*Applicant:* ${name}\n*Applied Post:* ${post}\n*Amount:* ₹${amount}\n*Date:* ${date}`);
+            
+            e.target.reset(); setDefaultDates();
+        }
+
+        function submitPrintIncome(e) {
+            e.preventDefault();
+            const date = document.getElementById('print-date').value; const service = document.getElementById('print-service').value;
+            const desc = document.getElementById('print-desc').value; const amount = document.getElementById('print-amount').value;
+            recordTransaction("income", `Print Desk: ${service}`, amount, date, desc);
+            generateExcelBill({"Date": date, "Service": service, "Details": desc || "Walk-in", "Amount": `₹ ${amount}`}, "PRINT_SERVICES");
+            
+            sendWhatsAppUpdate(`🟢 *PRINT DESK INCOME*\n*Service:* ${service}\n*Details:* ${desc || "Walk-in"}\n*Amount:* ₹${amount}\n*Date:* ${date}`);
+            
+            e.target.reset(); setDefaultDates();
+        }
+
+        function submitExpense(e) {
+            e.preventDefault();
+            const date = document.getElementById('exp-date').value; const category = document.getElementById('exp-category').value;
+            const amount = document.getElementById('exp-amount').value; const desc = document.getElementById('exp-desc').value;
+            if(parseFloat(amount) > appData.stats.balance && !confirm("Expense is greater than balance. Proceed?")) return;
+            recordTransaction("expense", category, amount, date, desc);
+            generateExcelBill({"Date": date, "Expense Category": category, "Description": desc || "N/A", "Amount Deducted": `₹ ${amount}`}, "EXPENDITURE_VOUCHER");
+            
+            sendWhatsAppUpdate(`🔴 *NEW EXPENDITURE*\n*Category:* ${category}\n*Amount:* ₹${amount}\n*Description:* ${desc || "N/A"}\n*Date:* ${date}`);
+            
+            e.target.reset(); setDefaultDates();
+        }
+
+        // --- RENDER LOGIC ---
+        function updateDashboard() {
+            const format = (num) => `₹${num.toLocaleString('en-IN')}`;
+            document.getElementById('dash-income').innerText = format(appData.stats.income);
+            document.getElementById('dash-expense').innerText = format(appData.stats.expense);
+            document.getElementById('dash-balance').innerText = format(appData.stats.balance);
+            document.getElementById('header-balance').innerText = format(appData.stats.balance);
+        }
+
+        function renderStudentList() {
+            const listEl = document.getElementById('student-list');
+            const searchQ = document.getElementById('filter-search') ? document.getElementById('filter-search').value.toLowerCase() : '';
+            const dueF = document.getElementById('filter-due') ? document.getElementById('filter-due').value : 'all';
+            const courseF = document.getElementById('filter-course') ? document.getElementById('filter-course').value : 'all';
+
+            listEl.innerHTML = '';
+            if(appData.students.length === 0) {
+                listEl.innerHTML = '<div class="text-center text-slate-400 mt-10"><i class="fa-solid fa-folder-open text-4xl mb-4 text-slate-200 block"></i><p class="font-bold text-slate-500">No students yet</p></div>'; return;
+            }
+
+            const courseSelect = document.getElementById('filter-course');
+            if (courseSelect) {
+                const currentVal = courseSelect.value;
+                const uniqueCourses = [...new Set(appData.students.map(s => s.course))];
+                let optionsHtml = '<option value="all">All Batches</option>';
+                uniqueCourses.forEach(c => { optionsHtml += `<option value="${c}">${c}</option>`; });
+                courseSelect.innerHTML = optionsHtml;
+                courseSelect.value = uniqueCourses.includes(currentVal) ? currentVal : 'all';
+            }
+
+            const filteredStudents = appData.students.filter(st => {
+                const dues = st.totalFee - st.paidFee;
+                const matchSearch = st.name.toLowerCase().includes(searchQ) || st.id.toLowerCase().includes(searchQ);
+                const matchDue = dueF === 'all' || (dueF === 'pending' && dues > 0) || (dueF === 'cleared' && dues <= 0);
+                const matchCourse = courseF === 'all' || st.course === courseF;
+                return matchSearch && matchDue && matchCourse;
+            });
+
+            if(filteredStudents.length === 0) {
+                listEl.innerHTML = '<div class="text-center text-slate-400 mt-10 text-sm font-bold"><i class="fa-solid fa-magnifying-glass text-3xl mb-3 block text-slate-300"></i>No matches found</div>'; return;
+            }
+
+            filteredStudents.forEach(st => {
+                const dues = st.totalFee - st.paidFee;
+                const avatar = st.image ? `<img src="${st.image}" class="w-full h-full object-cover">` : `<span class="font-bold text-lg">${st.name.charAt(0)}</span>`;
+                const card = document.createElement('div');
+                card.className = "flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl cursor-pointer hover:border-indigo-400 hover:shadow-lg transition-all group transform hover:-translate-y-1 shadow-sm";
+                card.onclick = () => selectStudent(st.id);
+                card.innerHTML = `
+                    <div class="flex items-center space-x-4 overflow-hidden">
+                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors overflow-hidden shadow-inner shrink-0">${avatar}</div>
+                        <div class="truncate">
+                            <p class="font-extrabold text-slate-800 text-sm truncate">${st.name}</p>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide mt-0.5 truncate">${st.id} • ${st.course}</p>
+                        </div>
+                    </div>
+                    <div class="text-right shrink-0 ml-2">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Due</p>
+                        <p class="${dues > 0 ? 'text-rose-500' : 'text-emerald-500'} font-black text-sm drop-shadow-sm">₹${dues}</p>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
+        }
+
+        function renderMiniLedger(studentName) {
+            const miniLedger = document.getElementById('student-mini-ledger');
+            miniLedger.innerHTML = '';
+            const stTx = appData.transactions.filter(t => t.title.includes(studentName));
+            if(stTx.length === 0) {
+                miniLedger.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-xs text-slate-400 font-bold">No payment history found.</td></tr>';
+                return;
+            }
+            stTx.forEach(tx => {
+                const isInc = tx.type === 'income';
+                miniLedger.innerHTML += `
+                    <tr class="hover:bg-slate-100 transition-colors border-b border-slate-100">
+                        <td class="py-3 px-3 text-slate-500 font-bold">${tx.date}</td>
+                        <td class="py-3 px-3 text-slate-800 font-bold max-w-[120px] truncate" title="${tx.title}">${tx.title.replace(` - ${studentName}`, '')}</td>
+                        <td class="py-3 px-3 text-right font-black ${isInc ? 'text-emerald-600' : 'text-rose-600'}">${isInc ? '+' : '-'}₹${tx.amount}</td>
+                        <td class="py-3 px-2 text-center"><button type="button" onclick="deleteTransaction('${tx.id}')" class="text-rose-300 hover:text-rose-600 transition-colors p-1" title="Delete Payment"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function selectStudent(id) {
+            const student = appData.students.find(s => s.id === id);
+            if(!student) return;
+            document.getElementById('tuition-placeholder').classList.add('hidden');
+            document.getElementById('tuition-active').classList.remove('hidden');
+            document.getElementById('active-student-name').innerText = student.name;
+            document.getElementById('active-student-course').innerText = student.course;
+            document.getElementById('active-student-gender').innerText = student.gender || "N/A";
+            document.getElementById('active-student-feetype').innerText = student.feeType || "Monthly";
+            document.getElementById('tuition-student-id').value = student.id;
+            document.getElementById('active-student-avatar').innerHTML = student.image ? `<img src="${student.image}" class="w-full h-full object-cover">` : student.name.charAt(0);
+            
+            document.getElementById('active-student-date').innerText = student.date || "-";
+            document.getElementById('active-student-phone').innerText = student.phone || "-";
+            document.getElementById('active-student-totalfee').innerText = `₹${student.totalFee}`;
+            document.getElementById('active-student-paidfee').innerText = `₹${student.paidFee}`;
+
+            const dues = student.totalFee - student.paidFee;
+            const dueEl = document.getElementById('active-student-dues');
+            dueEl.innerText = `₹${dues}`;
+            dueEl.className = dues <= 0 ? "text-3xl md:text-4xl font-black text-emerald-400 drop-shadow-md" : "text-3xl md:text-4xl font-black text-rose-400 drop-shadow-md";
+            if(dues <= 0) dueEl.innerText = "Cleared";
+
+            renderMiniLedger(student.name);
+            
+            if(window.innerWidth < 1024) document.getElementById('tuition-active').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function renderLedger() {
+            const tbody = document.getElementById('transaction-ledger'); tbody.innerHTML = '';
+            if(appData.transactions.length === 0) return;
+            appData.transactions.slice(0, 15).forEach(tx => {
+                const isInc = tx.type === 'income';
+                const badge = isInc ? `<span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-[10px] font-black tracking-widest shadow-sm">IN</span>` : `<span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-lg text-[10px] font-black tracking-widest shadow-sm">OUT</span>`;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0 transition-colors">
+                        <td class="py-4 px-4 text-slate-500 text-xs font-bold whitespace-nowrap">${tx.date}</td>
+                        <td class="py-4 px-4 font-extrabold text-slate-800 min-w-[200px]">${tx.title}</td>
+                        <td class="py-4 px-4 text-center">${badge}</td>
+                        <td class="py-4 px-4 text-right font-black text-base ${isInc ? 'text-emerald-600' : 'text-rose-600'}">${isInc ? '+' : '-'}₹${tx.amount.toLocaleString('en-IN')}</td>
+                        <td class="py-4 px-2 text-center">
+                            <button type="button" onclick="openEditTransactionModal('${tx.id}')" class="text-indigo-300 hover:text-indigo-600 transition-colors p-1" title="Edit Record"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" onclick="deleteTransaction('${tx.id}')" class="text-rose-300 hover:text-rose-600 transition-colors p-1" title="Delete Record"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderList(containerId, itemsFilterFn, titleReplace, iconClass, colorClass, emptyMsg) {
+            const listEl = document.getElementById(containerId); listEl.innerHTML = '';
+            const items = appData.transactions.filter(itemsFilterFn);
+            if(items.length === 0) { listEl.innerHTML = `<div class="text-center text-slate-400 mt-10"><i class="${iconClass} text-4xl mb-4 text-slate-200 block"></i><p class="font-bold text-slate-500">${emptyMsg}</p></div>`; return; }
+            items.forEach(tx => {
+                const isInc = tx.type === 'income';
+                listEl.innerHTML += `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 mb-3 gap-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-${colorClass}-50 text-${colorClass}-600 flex items-center justify-center text-2xl shadow-inner border border-${colorClass}-100 shrink-0"><i class="${iconClass}"></i></div>
+                            <div><h4 class="font-extrabold text-slate-800 text-sm md:text-base">${tx.title.replace(titleReplace, '')}</h4><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">${tx.date} ${tx.description ? '• ' + tx.description : ''}</p></div>
+                        </div>
+                        <div class="flex items-center gap-2 sm:gap-4 self-end sm:self-auto">
+                            <h3 class="text-xl md:text-2xl font-black drop-shadow-sm ${isInc ? 'text-emerald-600' : 'text-rose-600'}">${isInc ? '+' : '-'}₹${tx.amount.toLocaleString('en-IN')}</h3>
+                            <div class="flex space-x-1">
+                                <button type="button" onclick="openEditTransactionModal('${tx.id}')" class="text-indigo-300 hover:text-indigo-600 transition-colors p-2" title="Edit Record"><i class="fa-solid fa-pen"></i></button>
+                                <button type="button" onclick="deleteTransaction('${tx.id}')" class="text-rose-300 hover:text-rose-600 transition-colors p-2" title="Delete Record"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderExpenseList() { renderList('expense-list', t => t.type === 'expense', '', 'fa-solid fa-receipt', 'rose', 'No expenditures recorded.'); }
+        function renderJobList() { renderList('job-list', t => t.title.includes('Job Desk:'), 'Job Desk: ', 'fa-solid fa-user-tie', 'blue', 'No job applications yet.'); }
+        function renderPrintList() { renderList('print-list', t => t.title.includes('Print Desk:'), 'Print Desk: ', 'fa-solid fa-print', 'purple', 'No print income yet.'); }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`view-${tabId}`).classList.add('active');
+            document.getElementById(`nav-${tabId}`).classList.add('active');
+            const titles = { 'dashboard': 'System Dashboard', 'registration': 'New Admission', 'tuition': 'Student Database', 'job': 'Job Applications', 'print': 'Print & Copy Desk', 'expenditure': 'Expenditures' };
+            document.getElementById('page-title').innerText = titles[tabId];
+            if(window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                if(!sidebar.classList.contains('-translate-x-full')) toggleSidebar();
+            }
+        }
+    </script>
 </body>
 </html>
